@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  nextcloud_db:
+    image: mariadb
+    container_name: nextcloud_db
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=$NEXTCLOUD_MYSQL_ROOT_PASSWORD  # Mot de passe de l'utilisateur root de mariadb
+      - MYSQL_DATABASE=$NEXTCLOUD_MYSQL_DATABASE  # Nom de la base de données à créer à l'initialisation du conteneur
+      - MYSQL_USER=$NEXTCLOUD_MYSQL_USER  # Nom de l'utilisateur de la base de données créée
+      - MYSQL_PASSWORD=$NEXTCLOUD_MYSQL_PASSWORD  # Mot de passe de l'utilisateur créé
+    command: 
+      - --innodb-read-only-compressed=OFF
+
+  nextcloud_app:
+    image: nextcloud
+    restart: always
+    ports:
+      - $NEXTCLOUD_PORT:80
+    links:
+      - nextcloud_db
+    volumes:
+      - ./data:/var/www/html
+    environment:
+      - MYSQL_HOST=nextcloud_db  # Nom du conteneur de la base de données
+      - MYSQL_DATABASE=$NEXTCLOUD_MYSQL_DATABASE  # Nom de la base de données
+      - MYSQL_USER=$NEXTCLOUD_MYSQL_USER  # Nom de l'utilisateur de la base de données
+      - MYSQL_PASSWORD=$NEXTCLOUD_MYSQL_PASSWORD  # Mot de passe de l'utilisateur de la base de données
