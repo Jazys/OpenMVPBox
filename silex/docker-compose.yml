@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  silex-builder:
+    image : silexlabs/silex
+    restart: always
+    ports:
+      - 6805:6805
+    environment:
+      - ENABLE_FTP=true
+      - ENABLE_SFTP=true
