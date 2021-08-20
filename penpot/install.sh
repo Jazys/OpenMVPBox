@@ -5,8 +5,8 @@
 wget https://raw.githubusercontent.com/penpot/penpot/main/docker/images/docker-compose.yaml
 wget https://raw.githubusercontent.com/penpot/penpot/main/docker/images/config.env
 
-rm docker-compose.yaml
-rm config.env
+#rm docker-compose.yaml
+#rm config.env
 
 sed -i '1,2d' config.env
 
