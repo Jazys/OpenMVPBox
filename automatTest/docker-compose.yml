@@ -16,7 +16,7 @@ services:
     image : nginx
     restart: always
     ports:
-      - 8089:80
+      - ${ReportPort}:80
     volumes: 
       - ./TestReport:/var/www/html 
       - ./nginx:/etc/nginx/conf.d/
@@ -24,7 +24,7 @@ services:
   restarter:
     image: docker
     volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
-    command: ["/bin/sh", "-c", "while true; do sleep 60; docker restart cypress-automation_cypress_1; done"]
+    command: ["/bin/sh", "-c", "while true; do sleep ${TimeToRestart}; docker restart automattest_cypress_1; done"]
     restart: unless-stopped
     
   client_sftp:
@@ -33,14 +33,14 @@ services:
     environment:
     - APPLICATION_URL=
     ports:
-    - "8334:8334"
+    - "${ClientSftpPort}:8334"
     volumes:
       - ./dataClientSftp:/app/data/state
   
   sftp:
     image: "emberstack/sftp"
     ports:
-      - "2222:22"
+      - "${ServeurSftpPor}t:22"
     volumes:
       - ./cypress/integration:/home/user/sftp
       - ./configSftp.json:/app/config/sftp.json:ro
