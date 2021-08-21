@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  traefik:
+    image: traefik:2.2
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./conf/traefik.toml:/traefik.toml
+      - ./conf/traefik_dynamic.toml:/traefik_dynamic.toml
+      - ./conf/acme.json:/acme.json
+    networks:
+      - hosting_web
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+
+networks:
+  hosting_web:
+    external:
+      name: ${NETWORK_TRAEFIK}

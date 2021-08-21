@@ -1,0 +1,35 @@
+[global]
+  sendAnonymousUsage = false
+
+[log]
+  level = "INFO"
+  format = "common"
+
+[providers]
+  [providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    watch = true
+    exposedByDefault = true
+    swarmMode = false
+  [providers.file]
+    filename = "traefik_dynamic.toml"
+[api]
+  dashboard = true
+  debug = false
+  insecure = true
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "websecure"
+      scheme = "https"
+
+  [entryPoints.websecure]
+    address = ":443"
+
+[certificatesResolvers.lets-encrypt.acme]
+  email = "contact@openmvpbox.com"
+  storage = "acme.json"
+  [certificatesResolvers.lets-encrypt.acme.tlsChallenge]
+
