@@ -14,6 +14,8 @@ services:
     environment:
       - CMD_DB_URL=postgres://codimd:change_password@database/codimd
       - CMD_USECDN=false
+       # for not allow to sign in
+      - CMD_ALLOW_EMAIL_REGISTER=false
     depends_on:
       - database
     ports:
