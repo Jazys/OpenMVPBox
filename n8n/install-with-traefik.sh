@@ -1,9 +1,9 @@
 #!/bin/bash
 
-mkdir -p ponstgres-data
+mkdir -p postgres-data
 #chown postgres:postgres postgres-data/ -R
 #find better solution !!!
-chmod 777 postgres-data/ -R
+#chmod 777 postgres-data/ -R
 
 mkdir -p .n8n
 chmod +x init-data.sh
