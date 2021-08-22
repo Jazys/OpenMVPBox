@@ -1,0 +1,83 @@
+version: "3.7"
+
+services:
+  nginx:
+    image: index.docker.io/appsmith/appsmith-editor
+    env_file: ./docker.env
+    restart: always
+    volumes:
+      - ./data/nginx/app.conf.template:/nginx.conf.template
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - traefik.enable=true
+      - traefik.http.routers.appsmith.rule=Host(`${URL_APPSMITH}`)
+      - traefik.http.routers.appsmith.entrypoints=websecure
+      - traefik.http.routers.appsmith.tls=true
+      - traefik.http.routers.appsmith.tls.certresolver=lets-encrypt
+      - traefik.http.services.appsmith.loadbalancer.server.port=${PORT_APPSMITH}
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & /start-nginx.sh'"
+    depends_on:
+      - appsmith-internal-server
+    networks:
+      - traefik-proxy
+
+  appsmith-internal-server:
+    image: index.docker.io/appsmith/appsmith-server
+    env_file:
+      - ./docker.env
+      - ./encryption.env
+    restart: always
+    expose:
+      - "8080"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+      - redis
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    networks:
+      - traefik-proxy
+
+  mongo:
+    image: mongo
+    restart: always
+    expose:
+      - "27017"
+    environment:
+      - MONGO_INITDB_DATABASE=appsmith
+      - MONGO_INITDB_ROOT_USERNAME=test
+      - MONGO_INITDB_ROOT_PASSWORD=test
+    volumes:
+      - ./data/mongo/db:/data/db
+      - ./data/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - traefik-proxy
+
+  redis:
+    image: redis
+    restart: always
+    expose:
+      - "6379"
+    networks:
+      - traefik-proxy
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Update check interval in seconds.
+    command: --interval 300 --label-enable --cleanup
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
