@@ -10,19 +10,19 @@ services:
       - POSTGRES_USER=${POSTGRES_NON_ROOT_USER}
       - POSTGRES_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_HOST=postgres_n8n 
+      - POSTGRES_HOST=${POSTGRES_HOST}
     networks:
       - traefik-proxy
     volumes:
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
-      - ./postgres-data:/var/lib/postgresql
+      - postgresdata:/var/lib/postgresql
 
   n8n:
     image: n8nio/n8n
     restart: always
     environment:
       - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres_n8n
+      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
@@ -55,10 +55,17 @@ services:
 
 networks:
   traefik-proxy:
-    external: true
-    name: ${NETWORK_TRAEFIK}
+    external:
+      name: ${NETWORK_TRAEFIK}
 
 volumes:
+  postgresdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES}
+      o: bind
+
   n8n:
     driver: local
     driver_opts:
