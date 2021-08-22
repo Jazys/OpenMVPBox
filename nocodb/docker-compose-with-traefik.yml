@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  root_db:
+    image: postgres
+    restart: always
+    volumes:
+      - postgresdatanocodb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: root_db
+    networks:
+      - traefik-proxy
+    healthcheck:
+      test: pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 2s
+      retries: 10
+  nocodb:
+    depends_on:
+      - root_db
+    image: nocodb/nocodb:latest
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nocodb.rule=Host(`${URL_NOCODB}`)
+      - traefik.http.routers.nocodb.entrypoints=websecure
+      - traefik.http.routers.nocodb.tls=true
+      - traefik.http.routers.nocodb.tls.certresolver=lets-encrypt
+      - traefik.http.services.nocodb.loadbalancer.server.port=${PORT_NOCODB}
+    restart: always
+    environment:
+      NC_DB: "pg://root_db:5432?u=postgres&p=password&d=root_db"
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  postgresdatanocodb:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_NOCODB}
+      o: bind
