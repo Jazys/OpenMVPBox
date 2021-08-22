@@ -20,7 +20,7 @@ EncryptedPassword=$( cat ./password)
 echo $EncryptedPassword
 
 #./replaceInFile.sh traefik/conf/traefik_dynamic.toml login:passcrypt $EncryptedPassword 
-sed -i '/admin/c\'"$EncryptedPassword"'/g' traefik/conf/traefik_dynamic.toml
+sed -i '/admin/c\"'$EncryptedPassword'"' traefik/conf/traefik_dynamic.toml
 
 rm ./password
 
