@@ -1,7 +1,10 @@
 #!/bin/bash
 
 chmod +x traefik/install.sh
-./traefik/install.sh
+
+pushd traefik
+./install.sh
+popd
 
 read -p "Indicate your domain for monitor traefik: " domaineTraefik
 sed -i 's/xxx.xxx/'$domaineTraefik'/g' traefik/conf/traefik_dynamic.toml
@@ -17,7 +20,7 @@ EncryptedPassword=$( cat ./password)
 echo $EncryptedPassword
 
 #./replaceInFile.sh traefik/conf/traefik_dynamic.toml login:passcrypt $EncryptedPassword 
-sed -i 's/login:passcrypt/'$EncryptedPassword'/g' traefik/conf/traefik_dynamic.toml
+sed -i '/admin/c\'"$EncryptedPassword"'/g' traefik/conf/traefik_dynamic.toml
 
 rm ./password
 
