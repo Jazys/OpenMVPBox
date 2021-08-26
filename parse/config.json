@@ -12,7 +12,7 @@
   "users": [
     {
           "user":"test",
-          "pass":"test",
+          "pass":"test"
     }
   ]
 }
