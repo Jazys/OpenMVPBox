@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+          "serverURL":"http://144.126.218.1:1337/parse",
+          "appId":"myAPP",
+          "javascriptKey": "myJavascriptKey",
+          "restKey": "myRestKey",
+          "masterKey":"myKEY",
+          "cloud":"/parse-server/cloud/main.js"
+    }
+  ],
+  "users": [
+    {
+          "user":"test",
+          "pass":"test",
+    }
+  ]
+}
