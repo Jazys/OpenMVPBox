@@ -16,11 +16,11 @@ services:
       - datasilexweb:/root
     labels:
       - traefik.enable=true
-      - traefik.http.routers.penpot.rule=Host(`${URL_SILEX}`)
-      - traefik.http.routers.penpot.entrypoints=websecure
-      - traefik.http.routers.penpot.tls=true
-      - traefik.http.routers.penpot.tls.certresolver=lets-encrypt
-      - traefik.http.services.penpot.loadbalancer.server.port=${PORT_SILEX}
+      - traefik.http.routers.silex.rule=Host(`${URL_SILEX}`)
+      - traefik.http.routers.silex.entrypoints=websecure
+      - traefik.http.routers.silex.tls=true
+      - traefik.http.routers.silex.tls.certresolver=lets-encrypt
+      - traefik.http.services.silex.loadbalancer.server.port=${PORT_SILEX}
     networks:
       - traefik-proxy
 
