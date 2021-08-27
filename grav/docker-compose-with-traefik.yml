@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  grav:
+    build: ./
+    volumes:
+      - grav-data:/var/www/html
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grav.rule=Host(`${URL_GRAV}`)
+      - traefik.http.routers.grav.entrypoints=websecure
+      - traefik.http.routers.grav.tls=true
+      - traefik.http.routers.grav.tls.certresolver=lets-encrypt
+      - traefik.http.services.grav.loadbalancer.server.port=${PORT_GRAV}
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  grav-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/grav
+      o: bind

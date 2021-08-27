@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  grav:
+    build: ./
+    ports:
+      - 8080:80
+    volumes:
+      - grav-data:/var/www/html
+
+volumes:
+  grav-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/grav
+      o: bind
