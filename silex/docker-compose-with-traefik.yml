@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  silex-builder:
+    image : silexlabs/silex
+    restart: always
+    environment:
+      - ENABLE_FTP=true
+      - ENABLE_SFTP=true
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    volumes:
+      - datasilex:/silex
+      - datasilexweb:/root
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.penpot.rule=Host(`${URL_SILEX}`)
+      - traefik.http.routers.penpot.entrypoints=websecure
+      - traefik.http.routers.penpot.tls=true
+      - traefik.http.routers.penpot.tls.certresolver=lets-encrypt
+      - traefik.http.services.penpot.loadbalancer.server.port=${PORT_SILEX}
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  datasilex:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_SILEX}
+      o: bind
+  datasilexweb:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_SILEX_WEB}
+      o: bind
