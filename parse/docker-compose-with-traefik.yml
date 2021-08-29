@@ -16,7 +16,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.parse-server.rule=Host(`${URL_PARSE_SRV}`)
-      - traefik.http.routers.parse-servert.entrypoints=websecure
+      - traefik.http.routers.parse-server.entrypoints=websecure
       - traefik.http.routers.parse-server.tls=true
       - traefik.http.routers.parse-server.tls.certresolver=lets-encrypt
       - traefik.http.services.parse-server.loadbalancer.server.port=1337
@@ -59,11 +59,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.dash-server.rule=Host(`${URL_PARSE_DASH}`)
-      - traefik.http.routers.dash-servert.entrypoints=websecure
+      - traefik.http.routers.dash-server.entrypoints=websecure
       - traefik.http.routers.dash-server.tls=true
       - traefik.http.routers.dash-server.tls.certresolver=lets-encrypt
       - traefik.http.services.dash-server.loadbalancer.server.port=4040
-    command : parse-dashboard --config /src/Parse-Dashboard/parse-dashboard-config.json --allowInsecureHTTP true
+    command : parse-dashboard --config /src/Parse-Dashboard/parse-dashboard-config.json --allowInsecureHTTP false
     networks:
       - traefik-proxy
 
