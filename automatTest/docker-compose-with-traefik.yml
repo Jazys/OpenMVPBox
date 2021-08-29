@@ -46,10 +46,6 @@ services:
   client_sftp:
     image: machines/filestash
     restart: always
-    environment:
-    - APPLICATION_URL=
-    ports:
-    - "${ClientSftpPort}:8334"
     volumes:
       - sftp_cli:/app/data/state
     logging:
@@ -78,17 +74,12 @@ services:
         max-file: '5'
       driver: json-file
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.e2e-srv-sftp.rule=Host(`${URL_SRV-SFTP}`)
-      - traefik.http.routers.e2e-srv-sftp.entrypoints=websecure
-      - traefik.http.routers.e2e-srv-sftp.tls=true
-      - traefik.http.routers.e2e-srv-sftp.tls.certresolver=lets-encrypt
-      
-      - traefik.tcp.routers.mqtt.rule=HostSNI(`*`)
-      - traefik.tcp.routers.mqtt.tls.certresolver=lets-encrypt
-      - traefik.tcp.services.mqtt.loadbalancer.server.port=22      
-      - traefik.tcp.routers.mqtt.entrypoints=sftp
-      - traefik.tcp.services.e2e-srv-sftp.loadbalancer.server.port=${ServeurSftpPort}
+      - traefik.enable=true      
+      - traefik.tcp.routers.e2e-srv-sftp.rule=HostSNI(`*`)
+      - traefik.tcp.routers.e2e-srv-sftp.entrypoints=sftp
+      - traefik.tcp.routers.e2e-srv-sftp.service=e2e-srv-sftp-svc
+      #- traefik.tcp.routers.e2e-srv-sftp.tls.certresolver=lets-encrypt
+      - traefik.tcp.services.e2e-srv-sftp-svc.loadbalancer.server.port=22
     networks:
       - traefik-proxy
       

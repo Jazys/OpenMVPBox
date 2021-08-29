@@ -4,6 +4,7 @@
 
 mkdir -p dataClientSftp
 mkdir -p configSftp
+mkdir -p TestReport
 read -p "Indicate your domain for e2e test: " domaine
 
 #sed -i 's/PENPOT_PUBLIC_URI/PENPOT_PUBLIC_URI='$domaine'/g' config.env
