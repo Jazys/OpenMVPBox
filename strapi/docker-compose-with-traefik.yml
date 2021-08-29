@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  strapi:
+    container_name: strapi
+    image: strapi/strapi
+    environment:
+#      - NODE_ENV=production
+      - DATABASE_CLIENT=${DATABASE_CLIENT}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.strapi.rule=Host(`${URL_STRAPI}`)
+      - traefik.http.routers.strapi.entrypoints=websecure
+      - traefik.http.routers.strapi.tls=true
+      - traefik.http.routers.strapi.tls.certresolver=lets-encrypt
+      - traefik.http.services.strapi.loadbalancer.server.port=1337
+    volumes:
+      - app:/srv/app
+    depends_on:
+      - db
+    networks:
+      - traefik-proxy
+#    command: 'strapi start'
+
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    volumes:
+      - postgresdatastrapi:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  postgresdatastrapi:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_STRAPI}
+      o: bind
+
+  app:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_STRAPI_APP}
+      o: bind
