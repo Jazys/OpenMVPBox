@@ -45,3 +45,9 @@ Clone the project your VPS server (Ubuntu for the moment).
 ## Stack available
 
 - [x] NAN Stack for n8n, Appmith and NocoDB service ( use script ./installNANStack.sh in OpenMVPBox directory)
+- [x] E2E Stack, a stack for writting and running test for WebAPP ( use script xxxx in OpenMVPBox directory)
+- [] NAP Stack for n8n, Appmith and Parse Server service ( use script xxxx in OpenMVPBox directory)
+- [] S2S Stack for Silex and Strapi service ( use script xxxx in OpenMVPBox directory)
+- [] NAC Stack for n8n, Appsmith and CarboneJS ( use script xxxx in OpenMVPBox directory)
+- [] PG Stack for Penpot and Grav service ( use script xxxx in OpenMVPBox directory)
+
