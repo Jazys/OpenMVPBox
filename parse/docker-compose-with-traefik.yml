@@ -1,0 +1,88 @@
+version: "3.7"
+services:
+  parse-server:
+    image: parseplatform/parse-server
+    environment:
+      - PARSE_SERVER_APPLICATION_ID=myAPP
+      - PARSE_SERVER_MASTER_KEY=myKEY
+      - PARSE_SERVER_DATABASE_URI=postgres://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}  
+    volumes:
+      - cloud_parse:/parse-server/cloud
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.parse-server.rule=Host(`${URL_PARSE_SRV}`)
+      - traefik.http.routers.parse-servert.entrypoints=websecure
+      - traefik.http.routers.parse-server.tls=true
+      - traefik.http.routers.parse-server.tls.certresolver=lets-encrypt
+      - traefik.http.services.parse-server.loadbalancer.server.port=1337
+    links:
+      - db:db
+    depends_on:
+     - db
+    networks:
+      - traefik-proxy
+  
+  db:
+    image: kartoza/postgis:13.0
+    restart: always
+    environment:
+      # If you need to create multiple database you can add coma separated databases eg gis,data
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      # - ALLOW_IP_RANGE=0.0.0.0/0
+      # Add extensions you need to be enabled by default in the DB. Default are the five specified below
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology,postgis_raster,pgrouting
+    volumes:
+      - postgres_parse:/var/lib/postgresql
+    networks:
+      - traefik-proxy
+  
+  parse-dashboard:
+    image: parseplatform/parse-dashboard
+    volumes:
+      - ./config.json:/src/Parse-Dashboard/parse-dashboard-config.json
+    links:
+      - parse-server:parse-server
+    depends_on:
+      - parse-server
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dash-server.rule=Host(`${URL_PARSE_DASH}`)
+      - traefik.http.routers.dash-servert.entrypoints=websecure
+      - traefik.http.routers.dash-server.tls=true
+      - traefik.http.routers.dash-server.tls.certresolver=lets-encrypt
+      - traefik.http.services.dash-server.loadbalancer.server.port=4040
+    command : parse-dashboard --config /src/Parse-Dashboard/parse-dashboard-config.json --allowInsecureHTTP true
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  postgres_parse:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_PARSE}
+      o: bind
+      
+  cloud_parse:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_CLOUD}
+      o: bind

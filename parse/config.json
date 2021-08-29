@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-          "serverURL":"http://144.126.218.1:1337/parse",
+          "serverURL":"https://omvpb11.batisseurdunumerique.fr/parse",
           "appId":"myAPP",
           "javascriptKey": "myJavascriptKey",
           "restKey": "myRestKey",
