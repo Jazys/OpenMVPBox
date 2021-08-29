@@ -1,0 +1,44 @@
+# Siberian CMS SAE docker stack
+version: '3.7'
+
+services:
+  mysql:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: siberian
+      MYSQL_USER: siberian
+      MYSQL_PASSWORD: siberian
+    volumes:
+      - db:/var/lib/mysql:rw
+    ports:
+        - 3306:3306/tcp
+    deploy:
+      placement:
+        constraints:
+          - node.platform.os == linux
+          - node.role == manager
+  web:
+    image: rylorin/siberiancms:latest
+    depends_on:
+      - mysql
+    networks:
+      - default
+      - portainer_agent_network
+    deploy:
+      placement:
+        constraints:
+          - node.platform.os == linux
+          - node.role == manager
+    volumes:
+      - htdocs:/var/www/html:rw
+    ports:
+        - 80:80/tcp
+networks:
+  default:
+  portainer_agent_network:
+    external: true
+
+volumes:
+  db:
+  htdocs:
