@@ -1,0 +1,130 @@
+# e2e/docker-compose.yml from repo
+# https://github.com/bahmutov/cypress-open-from-docker-compose
+version: '3.8'
+services:
+  cypress:
+    # the Docker image to use from https://github.com/cypress-io/cypress-docker-images
+    # share the current folder as volume to avoid copying
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /e2e
+    labels:
+      - traefik.enable=false
+    volumes:
+      - cypress_all:/e2e
+  
+  nginx-report:
+    image : nginx
+    restart: always
+    volumes: 
+      - report:/var/www/html 
+      - ./nginx:/etc/nginx/conf.d/
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.e2e-report.rule=Host(`${URL_REPORT}`)
+      - traefik.http.routers.e2e-report.entrypoints=websecure
+      - traefik.http.routers.e2e-report.tls=true
+      - traefik.http.routers.e2e-report.tls.certresolver=lets-encrypt
+      - traefik.http.services.e2e-report.loadbalancer.server.port=80
+    networks:
+      - traefik-proxy
+  
+  restarter:
+    image: docker
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    command: ["/bin/sh", "-c", "while true; do sleep ${TimeToRestart}; docker restart automattest_cypress_1; done"]
+    labels:
+      - traefik.enable=false
+    restart: unless-stopped
+    
+  client_sftp:
+    image: machines/filestash
+    restart: always
+    environment:
+    - APPLICATION_URL=
+    ports:
+    - "${ClientSftpPort}:8334"
+    volumes:
+      - sftp_cli:/app/data/state
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.e2e-cli-sftp.rule=Host(`${URL_CLI_SFTP}`)
+      - traefik.http.routers.e2e-cli-sftp.entrypoints=websecure
+      - traefik.http.routers.e2e-cli-sftp.tls=true
+      - traefik.http.routers.e2e-cli-sftp.tls.certresolver=lets-encrypt
+      - traefik.http.services.e2e-cli-sftp.loadbalancer.server.port=${ClientSftpPort}
+    networks:
+      - traefik-proxy
+  
+  sftp:
+    image: "emberstack/sftp"  
+    volumes:
+      - cypress_int:/home/user/sftp
+      - ${VOLUME_SRV_FTP_CFG}:/app/config/sftp.json
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.e2e-srv-sftp.rule=Host(`${URL_SRV-SFTP}`)
+      - traefik.http.routers.e2e-srv-sftp.entrypoints=websecure
+      - traefik.http.routers.e2e-srv-sftp.tls=true
+      - traefik.http.routers.e2e-srv-sftp.tls.certresolver=lets-encrypt
+      
+      - traefik.tcp.routers.mqtt.rule=HostSNI(`*`)
+      - traefik.tcp.routers.mqtt.tls.certresolver=lets-encrypt
+      - traefik.tcp.services.mqtt.loadbalancer.server.port=22      
+      - traefik.tcp.routers.mqtt.entrypoints=sftp
+      - traefik.tcp.services.e2e-srv-sftp.loadbalancer.server.port=${ServeurSftpPort}
+    networks:
+      - traefik-proxy
+      
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  cypress_all:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_CYPRESS}
+      o: bind
+      
+  sftp_cli:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_CLI_SFTP}
+      o: bind
+
+  cypress_int:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_CYPRESS_INTEGRATION}
+      o: bind
+      
+  report:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_REPORT}
+      o: bind
+      
+
+
