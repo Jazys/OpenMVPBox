@@ -1,0 +1,62 @@
+version: "3"
+services:
+  database:
+    image: postgres:11.6-alpine
+    container_name: codi_postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-codimd}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-change_password}
+      - POSTGRES_DB=${POSTGRES_DB:-codimd}
+      - PGDATA=/data/postgres
+    volumes:
+      - postgresdatacodi:/data/postgres
+    restart: always
+    networks:
+      - traefik-proxy
+  codimd:
+    image: hackmdio/hackmd:2.4.1
+    environment:
+      - CMD_DB_URL=${POSTGRES_URL:-postgres://codimd:change_password@codi_postgres/codimd}
+      - CMD_USECDN=false
+       # for not allow to sign in
+      - CMD_ALLOW_EMAIL_REGISTER=false
+    depends_on:
+      - database
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.codi.rule=Host(`${URL_CODI}`)
+      - traefik.http.routers.codi.entrypoints=websecure
+      - traefik.http.routers.codi.tls=true
+      - traefik.http.routers.codi.tls.certresolver=lets-encrypt
+      - traefik.http.services.codi.loadbalancer.server.port=3000
+    volumes:
+      - codiupload:/home/hackmd/app/public/uploads
+    restart: always
+    networks:
+      - traefik-proxy
+    
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  postgresdatacodi:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_CODI}
+      o: bind
+
+  codiupload:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_UPLOAD}
+      o: bind
+
