@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM 'http://java.sun.com/dtd/properties.dtd'>
+<properties>
+    <entry key='config.default'>./conf/default.xml</entry>
+    <entry key='database.driver'>org.postgresql.Driver</entry>
+    <entry key='database.url'>jdbc:postgresql://postgres_container:5432/postgres</entry>
+    <entry key='database.user'>postgres</entry>
+    <entry key='database.password'>Azerty@1234</entry>
+<!--    <entry key='web.healthCheck'>false</entry> -->
+</properties>

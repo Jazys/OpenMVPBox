@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+
+  postgres:
+    container_name: postgres_container
+    image: postgres:12
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    networks:
+      - network_geoloc
+    labels:
+      - traefik.enable=false
+    restart: unless-stopped
+
+  traccar:
+    build:
+      context: ./
+      dockerfile : Dockerfile
+    container_name: traccar
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - ./conf/traccar.xml:/opt/traccar/conf/traccar.xml:ro
+      - ./conf/default.xml:/opt/traccar/conf/default.xml:ro
+      - ./log/traccar:/opt/traccar/logs:rw
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traccar.rule=Host(`${URL_TRACCAR}`)
+      - traefik.http.routers.traccar.service=traccar
+      - traefik.http.routers.traccar.entrypoints=websecure
+      - traefik.http.routers.traccar.tls=true
+      - traefik.http.routers.traccar.tls.certresolver=lets-encrypt
+      - traefik.http.services.traccar.loadbalancer.server.port=8082
+
+      - traefik.http.routers.traccar_api.rule=(Host(`${URL_TRACCAR}`) && Path(`/api-geoloc`))
+      - traefik.http.routers.traccar_api.entrypoints=websecure
+      - traefik.http.routers.traccar_api.service=traccar_api
+      - traefik.http.routers.traccar_api.tls=true
+      - traefik.http.routers.traccar_api.tls.certresolver=lets-encrypt
+      - traefik.http.services.traccar_api.loadbalancer.server.port=5055
+
+    networks:
+      - network_geoloc
+    restart: unless-stopped
+
+networks:
+  network_geoloc:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  postgres:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${POSTGRES_VOLUME}
+      o: bind

@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+
+  postgres:
+    container_name: postgres_container
+    image: postgres:12
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=false
+    restart: unless-stopped
+
+  traccar:
+    build:
+      context: ./
+      dockerfile : Dockerfile
+    container_name: traccar
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - ./conf/traccar.xml:/opt/traccar/conf/traccar.xml:ro
+      - ./conf/default.xml:/opt/traccar/conf/default.xml:ro
+      - ./log/traccar:/opt/traccar/logs:rw
+    ports:
+      - 8082:8082
+      - 5055:5055
+    restart: unless-stopped
+
+volumes:
+  postgres:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${POSTGRES_VOLUME}
+      o: bind
