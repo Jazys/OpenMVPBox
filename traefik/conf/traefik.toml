@@ -31,6 +31,9 @@
   [entryPoints.sftp]
     address = ":2222"
 
+  [entryPoints.mqtt]
+    address = ":9090"
+
 [certificatesResolvers.lets-encrypt.acme]
   email = "contact@openmvpbox.com"
   storage = "acme.json"
