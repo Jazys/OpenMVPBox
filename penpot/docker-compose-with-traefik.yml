@@ -67,9 +67,9 @@ services:
       - POSTGRES_DB=penpot
       - POSTGRES_USER=${PENPOT_DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${PENPOT_DATABASE_PASSWORD}
-
+      - PGDATA=/data/postgres
     volumes:
-      - datapostgrespenpot:/var/lib/postgresql/data
+      - datapostgrespenpot:/data/postgres
 
     networks:
       - traefik-proxy

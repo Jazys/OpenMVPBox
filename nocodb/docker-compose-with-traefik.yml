@@ -4,11 +4,12 @@ services:
     image: postgres
     restart: always
     volumes:
-      - postgresdatanocodb:/var/lib/postgresql/data
+      - postgresdatanocodb:/data/postgres
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
       POSTGRES_DB: root_db
+      PGDATA: /data/postgres
     networks:
       - traefik-proxy
     healthcheck:
