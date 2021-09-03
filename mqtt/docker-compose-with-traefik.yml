@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  mosquitto:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - MOSQUITTO_VERSION=${MOSQUITTO_VERSION:-latest}
+    environment:
+      - MOSQUITTO_USERNAME=${MOSQUITTO_USERNAME}
+      - MOSQUITTO_PASSWORD=${MOSQUITTO_PASSWORD}
+    image: eclipse-mosquitto:${MOSQUITTO_VERSION:-latest}
+    container_name: eclipse-mosquitto
+    restart: always
+    volumes:
+      - mqtt-data:/mosquitto/data
+    labels:
+      - traefik.enable=true
+      - traefik.tcp.services.mqtt.loadbalancer.server.port=${PORT_MQTT:-1883}
+      - traefik.tcp.routers.mqtt.rule=HostSNI(`*`)
+      - traefik.tcp.routers.mqtt.entrypoints=mqtt
+
+      - traefik.http.routers.mqtt.rule=Host(`${URL_MQTT}`)
+      - traefik.http.routers.mqtt.entrypoints=websecure
+      - traefik.http.routers.mqtt.tls.certresolver=lets-encrypt
+      - traefik.http.services.mqtt.loadbalancer.server.port=9001
+    networks:
+      - network-traefik
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+
+networks:
+  network-traefik:
+    external:
+      name: ${NETWORK_MQTT}
+
+volumes:
+  mqtt-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MQTT:-/root/mqtt/data}
+      o: bind
