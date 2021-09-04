@@ -25,11 +25,12 @@ services:
     image: postgres
     restart: always
     volumes:
-      - postgresdatastrapi:/var/lib/postgresql/data
+      - postgresdatastrapi:/data/postgres
     environment:
       POSTGRES_USER: strapi
       POSTGRES_PASSWORD: strapi
       POSTGRES_DB: strapi
+      PGDATA: /data/postgres
 
 volumes:
   postgresdatastrapi:

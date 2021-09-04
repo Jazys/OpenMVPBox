@@ -37,11 +37,12 @@ services:
     image: postgres
     restart: always
     volumes:
-      - postgresdatastrapi:/var/lib/postgresql/data
+      - postgresdatastrapi:/data/postgres
     environment:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
+      PGDATA: /data/postgres
     networks:
       - traefik-proxy
 
