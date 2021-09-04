@@ -1,0 +1,59 @@
+version: '3.1'
+
+services:
+
+  ghost:
+    image: ghost:4-alpine
+    restart: always
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ghost.rule=Host(`${URL_GHOST}`)
+      - traefik.http.routers.ghost.entrypoints=websecure
+      - traefik.http.routers.ghost.tls=true
+      - traefik.http.routers.ghost.tls.certresolver=lets-encrypt
+      - traefik.http.services.ghost.loadbalancer.server.port=2368
+    environment:
+      # see https://ghost.org/docs/config/#configuration-options
+      database__client: mysql
+      database__connection__host: db_ghost
+      database__connection__user: ${DATABASE_USER}
+      database__connection__password: ${DATABASE_PASSWORD}
+      database__connection__database: ${DATABASE_DATABASE}
+      # this url value is just an example, and is likely wrong for your environment!
+      url: https://${URL_GHOST}
+      # contrary to the default mentioned in the linked documentation, this image defaults to NODE_ENV=production (so development mode needs to be explicitly specified if desired)
+      #NODE_ENV: development
+    networks:
+      - traefik-proxy
+
+  db:
+    image: mysql:5.7
+    container_name: db_ghost
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_DATABASE}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - mysqlghost:/var/lib/mysql
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  mysqlghost:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MYSQL_GHOST}
+      o: bind
