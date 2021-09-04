@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+  minio:
+    image: minio/minio:latest
+    volumes:
+      - miniodata:/data
+    restart: always
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    labels:
+      - traefik.enable=true
+      
+      - traefik.http.routers.minio.rule=Host(`${URL_MINIO}`)
+      - traefik.http.routers.minio.entrypoints=websecure
+      - traefik.http.routers.minio.service=minio
+      - traefik.http.routers.minio.tls=true
+      - traefik.http.routers.minio.tls.certresolver=lets-encrypt
+      - traefik.http.services.minio.loadbalancer.server.port=9001
+      
+      - traefik.http.routers.minio-api.rule=(Host(`${URL_MINIO}`) && Path(`/api`))
+      - traefik.http.routers.minio-api.entrypoints=websecure
+      - traefik.http.routers.minio-api.service=minio-api
+      - traefik.http.routers.minio-api.tls=true
+      - traefik.http.routers.minio-api.tls.certresolver=lets-encrypt
+      - traefik.http.services.minio-api.loadbalancer.server.port=9000
+      
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  miniodata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MINIO}
+      o: bind
+
+
