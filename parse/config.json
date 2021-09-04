@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-          "serverURL":"https://omvpb11.batisseurdunumerique.fr/parse",
+"serveur":"https://xxxx/parse"
           "appId":"myAPP",
           "javascriptKey": "myJavascriptKey",
           "restKey": "myRestKey",
@@ -11,8 +11,8 @@
   ],
   "users": [
     {
-          "user":"test",
-          "pass":"test"
+          "user":"user_test",
+          "pass":"password_test"
     }
   ]
 }
