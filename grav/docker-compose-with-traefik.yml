@@ -5,6 +5,7 @@ services:
     build: ./
     volumes:
       - grav-data:/var/www/html
+    restart: always
     logging:
       options:
         max-size: '12m'
