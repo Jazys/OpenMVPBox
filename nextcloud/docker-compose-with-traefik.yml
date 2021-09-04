@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  nextcloud_db:
+    image: mariadb
+    container_name: nextcloud_db
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - mariadb_nc:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${NEXTCLOUD_MYSQL_ROOT_PASSWORD}  
+      - MYSQL_DATABASE=${NEXTCLOUD_MYSQL_DATABASE}  
+      - MYSQL_USER=${NEXTCLOUD_MYSQL_USER}  
+      - MYSQL_PASSWORD=${NEXTCLOUD_MYSQL_PASSWORD} 
+    command: 
+      - --innodb-read-only-compressed=OFF
+    networks:
+      - traefik-proxy
+
+  nextcloud_app:
+    image: nextcloud
+    restart: always
+    links:
+      - nextcloud_db
+    volumes:
+      - nextcloud_data:/var/www/html
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nextcloud.rule=Host(`${URL_NEXTCLOUD}`)
+      - traefik.http.routers.nextcloud.entrypoints=websecure
+      - traefik.http.routers.nextcloud.tls=true
+      - traefik.http.routers.nextcloud.tls.certresolver=lets-encrypt
+      - traefik.http.services.nextcloud.loadbalancer.server.port=80
+    environment:
+      - MYSQL_HOST=nextcloud_db  # Nom du conteneur de la base de données
+      - MYSQL_DATABASE=${NEXTCLOUD_MYSQL_DATABASE}  # Nom de la base de données
+      - MYSQL_USER=${NEXTCLOUD_MYSQL_USER}  # Nom de l'utilisateur de la base de données
+      - MYSQL_PASSWORD=${NEXTCLOUD_MYSQL_PASSWORD}  # Mot de passe de l'utilisateur de la base de données
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  mariadb_nc:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MARIADB_NC}
+      o: bind
+      
+  nextcloud_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_NC_DATA}
+      o: bind
