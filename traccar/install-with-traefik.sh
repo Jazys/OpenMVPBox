@@ -4,4 +4,6 @@
 
 mkdir postgres-data
 read -p "Indicate your domain for geoloc dashboard: " domaine
-sed -i 's/TRACCAR_URL/TRACCAR_URL='$domaine'/g' .env
+sed -i '/URL_TRACCAR/c\URL_TRACCAR='$domaine .env
+
+docker-compose -f docker-compose-with-traefik.yml up -d
