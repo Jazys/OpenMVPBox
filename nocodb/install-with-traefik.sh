@@ -2,7 +2,15 @@
 
 mkdir -p postgres-data
 
-read -p "Indicate your domain for NocoDB: " domaineNoco
+domaineNoco=""
+
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for NocoDB: " domaineNoco
+else
+      domaineNocon=$1
+      echo 'domaine for NocoDB is 'domaineNoco
+fi
 sed -i '/URL_NOCODB/c\URL_NOCODB='$domaineNoco'' .env
 
 docker-compose -f docker-compose-with-traefik.yml  up -d
