@@ -1,0 +1,41 @@
+# e2e/docker-compose.yml from repo
+# https://github.com/bahmutov/cypress-open-from-docker-compose
+version: '3.8'
+services:
+  app:
+    # the Docker image to use from https://github.com/cypress-io/cypress-docker-images
+    # share the current folder as volume to avoid copying
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./templates:/app/templates
+
+    
+  client_sftp:
+    image: machines/filestash
+    restart: always
+    environment:
+    - APPLICATION_URL=
+    ports:
+    - "3333:8334"
+    volumes:
+      - sftp_cli:/app/data/state
+  
+  sftp:
+    image: "emberstack/sftp"
+    ports:
+      - "5555:22"
+    volumes:
+      - ./templates:/home/user/sftp
+      - ./configSftp.json:/app/config/sftp.json:ro
+
+volumes:
+  sftp_cli:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_CLI_SFTP}
+      o: bind
