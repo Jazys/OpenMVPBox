@@ -6,10 +6,10 @@ domaineNoco=""
 
 if [ -z "$1" ]
 then
-      read -p "Indicate your domain for NocoDB: " domaineNoco
+      read -p "Indicate your domain for NocoDB: " $domaineNoco
 else
-      domaineNocon=$1
-      echo 'domaine for NocoDB is 'domaineNoco
+      domaineNoco=$1
+      echo 'domaine for NocoDB is '$domaineNoco
 fi
 sed -i '/URL_NOCODB/c\URL_NOCODB='$domaineNoco'' .env
 
