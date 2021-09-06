@@ -16,4 +16,12 @@ fi
 sed -i '/N8N_WEBHOOK_TUNNEL_URL/c\N8N_WEBHOOK_TUNNEL_URL=https://'$domaineN8n'/' .env
 sed -i '/URL_N8N/c\URL_N8N='$domaineN8n .env
 
+if [ -z "$2" ] && [ -z "$3" ]
+then
+      echo "use default user:test and password:test"
+else
+      sed -i '/N8N_BASIC_AUTH_USER/c\N8N_BASIC_AUTH_USER='$2 .env
+      sed -i '/N8N_BASIC_AUTH_PASSWORD/c\N8N_BASIC_AUTH_PASSWORD='$3 .env
+fi
+
 docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d
