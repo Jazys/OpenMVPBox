@@ -102,7 +102,8 @@ You need to check **userdata** and enter for example, the following script :
     chmod +x makeScriptExec.sh 
     ./makeScriptExec.sh 
     ./installDocker.sh 
-    ./installPythonPip.sh python3 createSubDomainOvh.py ton_Application_Key Ton_Application_Secret Ton_Consumer_Key tonNomDeDomaine *.tonSousDomaine $PUBLIC_IPV4 
+    ./installPythonPip.sh 
+    python3 createSubDomainOvh.py ton_Application_Key Ton_Application_Secret Ton_Consumer_Key tonNomDeDomaine *.tonSousDomaine $PUBLIC_IPV4 
     ./installManager.sh ndd_traefik login_dashboard_traefik password_dashboard_traefik ndd_portainer 
     ./installNANStack.sh ndd_n8n ndd_appsmith ndd_nocodb
 
