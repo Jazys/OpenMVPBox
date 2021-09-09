@@ -18,7 +18,7 @@ See https://www.batisseurdunumerique.fr/blog/fr, sorry only in french ...
 
 Give me feedback
 * for french people : https://cloud.batisseurdunumerique.fr/apps/forms/xQLZQXCJwkF7pFXg
-* for non french people : https://cloud.batisseurdunumerique.fr/apps/forms/2bXeAfjriE6smFYT
+* for non french people : https://cloud.batisseurdunumerique.fr/apps/forms/GDgyyMbmEteccRmB
 
 ## Why OpenMVPBox
 
