@@ -11,7 +11,14 @@ Minimal docker on your OpenMVPBox are :
 **Easy to use !** 
 
 OpenMVPBox is under **construction**.
-Need had some stack, create script for deploying it easily, work on **global security** on your VPS
+Need had some stack, create script for deploying it easily, work on **global security** on your VPS.
+
+I create also some **french article** (soon video) where I explain **how to use** it and give **some templates**. It's an **entire eco-system for helping entrepreneur**.
+See https://www.batisseurdunumerique.fr/blog/fr, sorry only in french ...
+
+Give me feedback
+* for french people : https://cloud.batisseurdunumerique.fr/apps/forms/xQLZQXCJwkF7pFXg
+* for non french people : https://cloud.batisseurdunumerique.fr/apps/forms/2bXeAfjriE6smFYT
 
 ## Why OpenMVPBox
 
@@ -84,9 +91,30 @@ You can use your favorite provider, for me it's DigitalOcean.
 Click on this link for creating an account. It's a affiliate link, for help me to maintain OpenMVPBox, please use my referral link. For test, I need to create several droplets (so costing !).
 
 For creating Droplet, use this link https://docs.digitalocean.com/products/droplets/how-to/create/
-You need to
+You need to use **Ubuntu** Distribution.
+Choose a strong password or SSH key (if you know and more secure)
+You need to check **userdata** and enter for example, the following script :
 
+    #!/bin/bash 
+    cd /root 
+    git clone https://github.com/Jazys/OpenMVPBox.git 
+    cd OpenMVPBox/ 
+    chmod +x makeScriptExec.sh 
+    ./makeScriptExec.sh 
+    ./installDocker.sh 
+    ./installPythonPip.sh python3 createSubDomainOvh.py ton_Application_Key Ton_Application_Secret Ton_Consumer_Key tonNomDeDomaine *.tonSousDomaine $PUBLIC_IPV4 
+    ./installManager.sh ndd_traefik login_dashboard_traefik password_dashboard_traefik ndd_portainer 
+    ./installNANStack.sh ndd_n8n ndd_appsmith ndd_nocodb
 
+Wait some minutes and service will be started on your your subdomain
+
+Defautl login/password :
+* portainer : create an account !! (not forget it)
+* for n8n : test/test
+* for appsmith : test@test.fr (user)
+* for nocodb : create your password
+
+See in each directory the .env file to see which login/password is use
 
 ## For developper
 
@@ -98,15 +126,15 @@ Clone the project your VPS server (Ubuntu for the moment).
     ./installManager.sh  (configure domaine name, login and password)
 
 Use all script that you want in each directory.
-* install.sh means your installation w
+* install.sh means you install with local docker-compose (use port and public ip)
 * install-with-traefik.sh means that you need to use the stack with traefik and domain name
 
-## Stack available
+## Stack can be deploy easily
 
 - [x] NAN Stack for n8n, Appmith and NocoDB service ( use script ./installNANStack.sh in OpenMVPBox directory)
 - [x] E2E Stack, a stack for writting and running test for WebAPP ( use script xxxx in OpenMVPBox directory)
-- [] NAP Stack for n8n, Appmith and Parse Server service ( use script xxxx in OpenMVPBox directory)
-- [] S2S Stack for Silex and Strapi service ( use script xxxx in OpenMVPBox directory)
-- [] NAC Stack for n8n, Appsmith and CarboneJS ( use script xxxx in OpenMVPBox directory)
-- [] PG Stack for Penpot and Grav service ( use script xxxx in OpenMVPBox directory)
+- [ ] NAP Stack for n8n, Appmith and Parse Server service ( use script xxxx in OpenMVPBox directory)
+- [ ] S2S Stack for Silex and Strapi service ( use script xxxx in OpenMVPBox directory)
+- [ ] NAC Stack for n8n, Appsmith and CarboneJS ( use script xxxx in OpenMVPBox directory)
+- [ ] PG Stack for Penpot and Grav service ( use script xxxx in OpenMVPBox directory)
 
