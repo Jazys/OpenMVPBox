@@ -12,3 +12,5 @@ echo "password généré" $password
 passwordCmdPortainerDoc=$(htpasswd -nb -B admin $password | cut -d ":" -f 2)
 echo $passwordCmdPortainerDoc
 sed -i '/PASSWORD_PORTAINER=/c\PASSWORD_PORTAINER='$passwordCmdPortainerDoc'' .env
+
+echo "Password pour le login admin de Portainer : " $password >> /tmp/mail
