@@ -4,7 +4,9 @@ services:
     container_name: portainer
     image: portainer/portainer-ce:latest
     restart: unless-stopped
-    command: -H unix:///var/run/docker.sock
+    command: --admin-password '${PASSWORD_PORTAINER}'
+#    ports:
+#      - "9000:9000"
     logging:
       options:
         max-size: '12m'
