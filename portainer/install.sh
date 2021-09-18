@@ -8,7 +8,7 @@ if [ -z "$1" ]
 then
       read -p "Indicate your domain for portainer: " domainePortainer
 else
-      domainePortainer=$4
+      domainePortainer=$1
       echo 'Domaine of portainer is ' $domainePortainer
 fi
 
