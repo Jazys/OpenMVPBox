@@ -3,6 +3,7 @@
 import sys
 import json
 import ovh
+import time
 
 if len(sys.argv)!= 7:
   print ("Il manque des arguments, vous devez entrer application_key, application_secret, consumer_api, nom de domaine, sous-domaine et ip")
@@ -20,3 +21,6 @@ else:
       target=sys.argv[6],
       ttl=60, )
   print ("Creation avec succès")
+  time.sleep(10)
+  result = client.post('/domain/zone/'+sys.argv[4]+'/refresh')
+  print ("Refresh avec succès")
