@@ -76,7 +76,7 @@ Productivity : (not include)
 
 ## How to Use the OpenMVPBox on a VPS
 
-## For normal person
+## For normal person 
 
 ### Domain Name creation
 Create your domaine name using https://us.ovhcloud.com/.
@@ -89,6 +89,9 @@ You can use your favorite provider, for me it's DigitalOcean.
 
 Click on this link for creating an account. It's a affiliate link, to help me maintaining OpenMVPBox, please use my referral link. For tests, I need to create several droplets (so expensive !).
 
+Use this link **https://omvpb.ovh/#/** for having a guide on how to create OpenMVPBox. **(really recommended)**
+
+Or If you don't want use external service for creating it, and use only DO dashboard
 For creating Droplet, use this link https://docs.digitalocean.com/products/droplets/how-to/create/
 You need to use **Ubuntu** Distribution.
 Choose a strong password or SSH key (if you know it, it's safer)
@@ -121,9 +124,17 @@ Each directory the .env file includes your login/password.
 Clone the project on your VPS server (Ubuntu for the moment).
 
     cd OpenMVPBox
+    chmod +x makeScriptExec
     ./makeScriptExec.sh
     ./installDocker.sh
-    ./installManager.sh  (configure domaine name, login and password)
+    ./installPythonPip.sh
+    export PUBLIC_IPV4=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
+    python3 createSubDomainOvh.py appKeyOVH "appSecretOVH consumerKeyOVH domainName subDomain $PUBLIC_IPV4
+    ./installDocker.sh
+    ./installManager.sh traefikSubDomain loginTraefik passwordTraefik portainerSubDomain
+    OR
+    ./installManagerAutoLoginPass.sh traefikSubDomain portainerSubDomain
+    Credidentials information are in /tmp/toSendByMail 
 
 Use any script that you want in each directory.
 * install.sh means you install with local docker-compose (use port and public ip)
