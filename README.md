@@ -44,6 +44,7 @@ Stack:
 - **parse** - **nocodb** - appwrite  -directus  ==> backend or database
 - **penpot** ==> creating UI and mockup
 - **n8n** - nodered (like for low-level industry) ==> create automation (my favorite tool)
+- **uniflow** - Automate your recurring tasks once, run it everywhere. (default account : admin@uniflow.io / admin)
 - **silex** - **appsmith** ==> create web site or UI dashboard
 - **grav** - **ghost** ==> create blog site
 - **wikijs** - **codimd** - outline ==> share note and wiki
