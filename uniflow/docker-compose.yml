@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  mysql:
+    hostname: uniflow_mysql
+    image: mysql:5.7
+    command: --max_allowed_packet=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-file /data/init.sql
+    volumes:
+        - ./init.sql:/data/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_HOST=%
+  uniflow-api:
+    build: ./api
+    image: uniflowio/uniflow-api
+    restart: always
+    environment:
+      - DB_TYPE=mysql
+      - DB_MYSQL_HOST=uniflow_mysql
+      - DB_MYSQL_DATABASE=uniflow
+      - DB_MYSQL_USER=root
+      - DB_MYSQL_PASSWORD=root
+      - DB_MYSQL_PORT=3306
+    ports:
+      - 8017:8017
+    links:
+      - mysql
+    # Wait 5 seconds to start uniflow-api to make sure that MySQL is ready
+    # when uniflow-api tries to connect to it
+    command: /bin/sh -c "sleep 5; uniflow-api start"
+  uniflow-client:
+    build: ./client
+    image: uniflowio/uniflow-client
+    restart: always
+    environment:
+      - GATSBY_CLIENT_URL=http://localhost:8016
+      - GATSBY_API_URL=http://localhost:8017
+    ports:
+      - 8016:8016
+    command: /bin/sh -c "uniflow-client start"
