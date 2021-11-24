@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    environment: 
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${USER_PG}
+      MB_DB_PASS: ${PASS_PG}
+      MB_DB_HOST: postgres-meta
+    volumes: 
+    - /dev/urandom:/dev/random:ro
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.metabase.rule=Host(`${URL_META}`)
+      - traefik.http.routers.metabase.entrypoints=websecure
+      - traefik.http.routers.metabase.tls=true
+      - traefik.http.routers.metabase.tls.certresolver=lets-encrypt
+      - traefik.http.services.metabase.loadbalancer.server.port=3000
+    depends_on:
+      - db
+    networks:
+      - traefik-proxy
+      
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    hostname: postgres-meta
+    volumes:
+      - postgresmetabase:/data/postgres
+    environment:
+      POSTGRES_USER: ${USER_PG}
+      POSTGRES_PASSWORD: ${PASS_PG}
+      POSTGRES_DB: metabase
+      PGDATA: /data/postgres
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  postgresmetabase:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_META}
+      o: bind
