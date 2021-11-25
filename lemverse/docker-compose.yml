@@ -1,0 +1,137 @@
+version: "3.8"
+services:
+    mongodb:
+        image: mongo:5.0.3
+        container_name: mongodb
+        environment:
+            - PUID=1000
+            - PGID=1000
+        networks:
+            - traefik-proxy
+        volumes:
+            - mongolem:/data/db
+        restart: unless-stopped
+
+    lemverse:
+        image: lempire/lemverse:latest
+        container_name: lemverse
+        restart: unless-stopped
+        networks:
+            - traefik-proxy
+        depends_on:
+            - mongodb
+            - peer
+        logging:
+          options:
+            max-size: '12m'
+            max-file: '5'
+          driver: json-file
+        volumes:
+            - lemverse:/var/tmp/lemverse
+#            - ./lemverse.json:/usr/local/etc/lemverse.json
+        labels:
+          - traefik.enable=true
+          - traefik.http.routers.lemverse.rule=Host(`${URL_LEMVERSE}`)
+          - traefik.http.routers.lemverse.entrypoints=websecure
+          - traefik.http.routers.lemverse.tls=true
+          - traefik.http.routers.lemverse.tls.certresolver=lets-encrypt
+          - traefik.http.services.lemverse.loadbalancer.server.port=3000
+        environment:
+            ROOT_URL: ${APP_ROOT_URL:-http://localhost}
+            MONGO_URL: mongodb://mongodb:27017/meteor
+            PORT: 3000
+            METEOR_SETTINGS: | # App settings
+                {
+                    "public": {
+                        "lp": {
+                            "product": "lemverse",
+                            "process": "main",
+                            "gods": [""],
+                            "production": true,
+                            "staging": false,
+                            "enableLogClient": false
+                        },
+                        "debug": false,
+                        "defaultReaction": "❤️",
+                        "zoom": 1,
+                        "peer": {
+                            "answerMaxAttempt": 5,
+                            "answerDelayBetweenAttempt": 750,
+                            "avatarAPI": "https://robohash.org/[user_id]?set=set4&bgset=bg2&size=320x240",
+                            "callDelay": 250,
+                            "delayBeforeClosingCall": 1000
+                        },
+                        "meet": {
+                            "serverURL": "meet.jit.si",
+                            "roomDefaultName": "lemverse-test"
+                        },
+                        "character": {
+                            "walkSpeed": 180,
+                            "runSpeed": 720
+                        },
+                        "characterNames": ["Basic", "Ghost"],
+                        "skins": {
+                            "guest": "Ghost",
+                            "default": "Basic"
+                        },
+                        "templateLevelId": "lvl_iLOVEaLOTlemverse"
+                    },
+                    "defaultLevelId": "lvl_iLOVEaLOTlemverse",
+                    "peer": {
+                        "path": "/peer",
+                        "client": {
+                            "url": "peer.nuage.omvpb.ovh",
+                            "port": 443,
+                            "credentialDuration": 86400,
+                            "secret": "",
+                            "config": { 
+                                "iceServers": [{ 
+                                "urls": "stun:stun.l.google.com:19302"
+                                }],
+                                "iceTransportPolicy" : "all",
+                                "sdpSemantics": "unified-plan"
+                            }
+                        },
+                        "server": {
+                            "start": false,
+                            "port": 443,
+                            "key": "peerjs",
+                            "alive_timeout": 60000,
+                            "expire_timeout": 5000,
+                            "allow_discovery": false
+                        }
+                    }
+                }
+    peer:
+        image: peerjs/peerjs-server:0.6.1
+        container_name: peer
+        restart: unless-stopped
+        labels:
+          - traefik.enable=true
+          - traefik.http.routers.peerjs.rule=Host(`${URL_PEERJS}`)
+          - traefik.http.routers.peerjs.entrypoints=websecure
+          - traefik.http.routers.peerjs.tls=true
+          - traefik.http.routers.peerjs.tls.certresolver=lets-encrypt
+          - traefik.http.services.peerjs.loadbalancer.server.port=9000
+        networks:
+            - traefik-proxy
+        command: [ "--port", "9000", "--path", "/peer" ]
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  mongolem:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MONGO_LEMVERSE}
+      o: bind
+  lemverse:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_LEMVERSE}
+      o: bind
