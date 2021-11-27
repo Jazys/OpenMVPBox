@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma
+    container_name: uptime-kuma
+    volumes:
+      - uptime-kuma:/app/data
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kuma.rule=Host(`${URL_KUMA}`)
+      - traefik.http.routers.kuma.entrypoints=websecure
+      - traefik.http.routers.kuma.tls=true
+      - traefik.http.routers.kuma.tls.certresolver=lets-encrypt
+      - traefik.http.services.kuma.loadbalancer.server.port=3001
+    networks:
+      - traefik-proxy
+    restart: always
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+       
+volumes:
+  uptime-kuma:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_KUMA}
+      o: bind
