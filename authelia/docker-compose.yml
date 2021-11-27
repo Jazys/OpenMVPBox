@@ -1,0 +1,55 @@
+version: '3.3'
+
+services:
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    volumes:
+      - ./config:/config
+    networks:
+      - net
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.authelia.rule=Host(`authelia.example.com`)'
+      - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.routers.authelia.tls=true'
+      - 'traefik.http.routers.authelia.tls.certresolver=letsencrypt'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://authelia.example.com'  # yamllint disable-line rule:line-length
+      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
+      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'  # yamllint disable-line rule:line-length
+    expose:
+      - 9091
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      - TZ=Australia/Melbourne
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - ./redis:/data
+    networks:
+      - net
+    expose:
+      - 6379
+    restart: unless-stopped
+    environment:
+      - TZ=Australia/Melbourne
+
+  secure:
+    container_name: secure
+    networks:
+      - net
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.secure.rule=Host(`secure.example.com`)'
+      - 'traefik.http.routers.secure.entrypoints=https'
+      - 'traefik.http.routers.secure.tls=true'
+      - 'traefik.http.routers.secure.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.secure.middlewares=authelia@docker'
+    expose:
+      - 80
+    restart: unless-stopped
+
