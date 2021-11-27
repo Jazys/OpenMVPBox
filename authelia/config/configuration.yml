@@ -4,7 +4,7 @@
 ###############################################################
 
 jwt_secret: a_very_important_secret
-default_redirection_url: https://public.example.com
+default_redirection_url: https://auth.nuage.omvpb.ovh
 
 server:
   host: 0.0.0.0
@@ -31,12 +31,12 @@ access_control:
   default_policy: deny
   rules:
     # Rules applied to everyone
-    - domain: public.example.com
-      policy: bypass
-    - domain: traefik.example.com
+#    - domain: public.example.com
+#      policy: bypass
+    - domain: test.nuage.omvpb.ovh
       policy: one_factor
-    - domain: secure.example.com
-      policy: two_factor
+#    - domain: secure.example.com
+#      policy: two_factor
 
 session:
   name: authelia_session
@@ -44,7 +44,7 @@ session:
   secret: unsecure_session_secret
   expiration: 3600  # 1 hour
   inactivity: 300  # 5 minutes
-  domain: example.com  # Should match whatever your root protected domain is
+  domain: nuage.omvpb.ovh  # Should match whatever your root protected domain is
 
   redis:
     host: redis
@@ -62,6 +62,7 @@ storage:
     path: /config/db.sqlite3
 
 notifier:
+  disable_startup_check: true
   smtp:
     username: test
     # This secret can also be set using the env variables AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE

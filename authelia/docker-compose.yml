@@ -7,14 +7,14 @@ services:
     volumes:
       - ./config:/config
     networks:
-      - net
+      - traefik-proxy
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.authelia.rule=Host(`authelia.example.com`)'
-      - 'traefik.http.routers.authelia.entrypoints=https'
+      - 'traefik.http.routers.authelia.rule=Host(`${URL_AUTH}`)'
+      - 'traefik.http.routers.authelia.entrypoints=websecure'
       - 'traefik.http.routers.authelia.tls=true'
       - 'traefik.http.routers.authelia.tls.certresolver=letsencrypt'
-      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://authelia.example.com'  # yamllint disable-line rule:line-length
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://${URL_AUTH}'  # yamllint disable-line rule:line-length
       - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
       - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email'  # yamllint disable-line rule:line-length
     expose:
@@ -23,7 +23,7 @@ services:
     healthcheck:
       disable: true
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=Europe/Paris
 
   redis:
     image: redis:alpine
@@ -31,21 +31,22 @@ services:
     volumes:
       - ./redis:/data
     networks:
-      - net
+      - traefik-proxy
     expose:
       - 6379
     restart: unless-stopped
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=Europe/Paris
 
   secure:
+    image: traefik/whoami
     container_name: secure
     networks:
-      - net
+      - traefik-proxy
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.secure.rule=Host(`secure.example.com`)'
-      - 'traefik.http.routers.secure.entrypoints=https'
+      - 'traefik.http.routers.secure.rule=Host(`test.nuage.omvpb.ovh`)'
+      - 'traefik.http.routers.secure.entrypoints=websecure'
       - 'traefik.http.routers.secure.tls=true'
       - 'traefik.http.routers.secure.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.secure.middlewares=authelia@docker'
@@ -53,3 +54,7 @@ services:
       - 80
     restart: unless-stopped
 
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
