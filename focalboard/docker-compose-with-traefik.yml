@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  app:
+    image: mattermost/focalboard
+    container_name: focalboard
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.focalboard.rule=Host(`${URL_FOCALBOARD}`)
+      - traefik.http.routers.focalboard.entrypoints=websecure
+      - traefik.http.routers.focalboard.tls=true
+      - traefik.http.routers.focalboard.tls.certresolver=lets-encrypt
+      - traefik.http.services.focalboard.loadbalancer.server.port=8000
+    depends_on:
+      - focalboard-db
+    networks:
+      - traefik-proxy
+    volumes:
+      - "./config.json:/opt/focalboard/config.json"
+    restart: always
+
+  focalboard-db:
+    container_name: focalboard-postgres
+    image: postgres
+    restart: always
+    volumes:
+      - postgresfocal:/data/postgres
+    environment:
+      POSTGRES_USER: boardsuser
+      POSTGRES_PASSWORD: boardsuser-password
+      POSTGRES_DB: boards
+      PGDATA: /data/postgres
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+       
+volumes:
+  postgresfocal:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_FOCAL}
+      o: bind
