@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - postgreskeycloak:/data/postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    networks:
+      - traefik-proxy
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.keycloak.rule=Host(`${URL_KEYCLOAK}`)
+      - traefik.http.routers.keycloak.entrypoints=websecure
+      - traefik.http.routers.keycloak.tls=true
+      - traefik.http.routers.keycloak.tls.certresolver=lets-encrypt
+      - traefik.http.services.keycloak.loadbalancer.server.port=8080
+    environment:
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=postgres
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_SCHEMA=public
+      - DB_PASSWORD=password
+      - KEYCLOAK_USER=${USER_KEYCLOAK}
+      - KEYCLOAK_PASSWORD=${PASSWORD_KEYCLOAK}
+      - PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_HOSTNAME=${URL_KEYCLOAK}
+    networks:
+      - traefik-proxy
+    depends_on:
+      - postgres
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+       
+volumes:
+  postgreskeycloak:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES_KEYCLOAK}
+      o: bind
