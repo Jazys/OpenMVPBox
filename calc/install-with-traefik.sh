@@ -28,4 +28,4 @@ sed -i 's/$creditentials/'$cred'/g' docker-compose-with-traefik.yml
 sed -i '/NEXT_PUBLIC_APP_URL/c\NEXT_PUBLIC_APP_URL=https://'$domaine .env
 
 
-#docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
