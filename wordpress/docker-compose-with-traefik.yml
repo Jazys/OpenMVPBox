@@ -1,0 +1,67 @@
+version: "3.3"
+    
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysqlwordpressContainer
+    volumes:
+      - mysqlwordpress:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - wordpress-network
+    
+    
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    volumes:
+      - datawordpress:/var/www/html
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wordpress.rule=Host(`${URL_WORDPRESS}`)
+      - traefik.http.routers.wordpress.entrypoints=websecure
+      - traefik.http.routers.wordpress.tls=true
+      - traefik.http.routers.wordpress.tls.certresolver=lets-encrypt
+      - traefik.http.services.wordpress.loadbalancer.server.port=80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysqlwordpressContainer:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - traefik-proxy
+      - wordpress-network
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+  wordpress-network:
+    internal: true
+
+volumes:
+ mysqlwordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MYSQL_WORDPRESS}
+      o: bind
+
+ datawordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_WORDPRESS}
+      o: bind
