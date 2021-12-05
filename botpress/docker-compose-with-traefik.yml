@@ -7,17 +7,27 @@ services:
       dockerfile: Dockerfile
     image: botpress/server
     container_name: botpress-server
-    ports:
-      - 3020:3000
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.botpress.rule=Host(`${URL_BOTPRESS}`)
+      - traefik.http.routers.botpress.entrypoints=websecure
+      - traefik.http.routers.botpress.tls=true
+      - traefik.http.routers.botpress.tls.certresolver=lets-encrypt
+      - traefik.http.routers.botpress.service=botpress-srv
+      - traefik.http.services.botpress-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
     environment:
       - DATABASE_URL=postgres://postgres:secretpw@postgresBotpress:5435/botpress_db
       - BP_MODULE_NLU_DUCKLINGURL=http://botpress_lang:8000
       - BP_MODULE_NLU_LANGUAGESOURCES=[{"endpoint":"http://botpress_lang:3100"}]
-      - EXTERNAL_URL=http://localhost:3000
+      - EXTERNAL_URL=http://${URL_BOTPRESS}
     depends_on:
       - postgres
     volumes:
-      -  botpress-data:/botpress/data
+      -  botpress-data:/botpress/
+    networks:
+      - traefik-proxy
+      - botpress-network
 
   botpress_lang:
     build:
@@ -31,6 +41,8 @@ services:
       - 8000
     volumes:
       - botpress-lang:/botpress/lang
+    networks:
+      - botpress-network
 
   postgres:
     image: postgres:11.2-alpine
@@ -40,8 +52,18 @@ services:
       POSTGRES_DB: botpress_db
       POSTGRES_PASSWORD: secretpw
       POSTGRES_USER: postgres
+      PGDATA: /data/postgres
     volumes:
-      - botpress-db:/var/lib/postgresql/data
+      - botpress-db:/data/postgres
+    networks:
+      - botpress-network
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+  botpress-network:
+    internal: true
 
 volumes:
  botpress-db:
