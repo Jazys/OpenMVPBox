@@ -33,6 +33,7 @@ services:
       - traefik.http.routers.calendar.tls.certresolver=lets-encrypt
       - traefik.http.routers.calendar.service=calendar-srv
       - traefik.http.services.calendar-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
     networks:
       - traefik-proxy
       - calc-network  
@@ -62,6 +63,7 @@ services:
       - traefik.http.routers.prismacalendar.tls.certresolver=lets-encrypt
       - traefik.http.routers.prismacalendar.service=prismacalendar-srv
       - traefik.http.services.prismacalendar-srv.loadbalancer.server.port=5555
+      - traefik.docker.network=${NETWORK_TRAEFIK}
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-calc/${POSTGRES_DB}
