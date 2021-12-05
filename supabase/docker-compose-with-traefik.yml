@@ -22,6 +22,7 @@ services:
       - "traefik.http.middlewares.test-auth-supa.basicauth.users=$creditentials"
       - traefik.http.routers.supabase-front.service=supabase-front-srv
       - traefik.http.services.supabase-front-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
     environment:
       SUPABASE_URL: http://kong:8000
       STUDIO_PG_META_URL: http://meta:8080
@@ -42,6 +43,7 @@ services:
       - traefik.http.routers.supabase-back.tls.certresolver=lets-encrypt
       - traefik.http.routers.supabase-back.service=supabase-back-srv
       - traefik.http.services.supabase-back-srv.loadbalancer.server.port=8000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
