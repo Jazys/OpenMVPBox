@@ -1,0 +1,71 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb
+    command: --max-allowed-packet=64MB
+    restart: always
+    volumes:
+      - mysqlmatomo:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+    env_file:
+      - ./.env
+    networks:
+      - matomo-network
+
+  app:
+    image: matomo:fpm-alpine
+    restart: always
+    links:
+      - db
+    volumes:
+      - datamatomo:/var/www/html
+    environment:
+      - MATOMO_DATABASE_HOST=db
+      - PHP_MEMORY_LIMIT=2048M
+    env_file:
+      - ./.env
+    networks:
+      - matomo-network
+
+  web:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - datamatomo:/var/www/html:ro
+      - ./matomo.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.matomo.rule=Host(`${URL_MATOMO}`)
+      - traefik.http.routers.matomo.entrypoints=websecure
+      - traefik.http.routers.matomo.tls=true
+      - traefik.http.routers.matomo.tls.certresolver=lets-encrypt
+      - traefik.http.routers.matomo.service=matomo-srv
+      - traefik.http.services.matomo-srv.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    networks:
+      - matomo-network
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+  matomo-network:
+    internal: true
+    
+volumes:
+ mysqlmatomo:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MYSQL_MATOMO}
+      o: bind
+
+ datamatomo:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_MATOMO}
+      o: bind

@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb
+    command: --max-allowed-packet=64MB
+    restart: always
+    volumes:
+      - mysqlmatomo:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=matomo
+    env_file:
+      - ./.env
+
+  app:
+    image: matomo:fpm-alpine
+    restart: always
+    links:
+      - db
+    volumes:
+      - datamatomo:/var/www/html
+    environment:
+      - MATOMO_DATABASE_HOST=db
+      - PHP_MEMORY_LIMIT=2048M
+    env_file:
+      - ./.env
+
+  web:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - datamatomo:/var/www/html:ro
+      - ./matomo.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - 8085:80
+
+
+    
+volumes:
+ mysqlmatomo:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MYSQL_MATOMO}
+      o: bind
+
+ datamatomo:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_MATOMO}
+      o: bind
