@@ -1,0 +1,34 @@
+version: "3"
+services:
+
+  grafana:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grafana
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana.rule=Host(`${URL_GRAFANA}`)
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.routers.grafana.tls=true
+      - traefik.http.routers.grafana.tls.certresolver=lets-encrypt
+      - traefik.http.routers.grafana.service=grafana-srv
+      - traefik.http.services.grafana-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+ grafana-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_GRAFANA}
+      o: bind

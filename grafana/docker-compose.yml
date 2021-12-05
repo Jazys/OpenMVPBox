@@ -3,13 +3,27 @@ services:
 # My grafana service 
   grafana:
     build:
-      context: ./grafana
+      context: .
+      dockerfile: Dockerfile
     container_name: grafana
     ports:
       - 9000:3000
     volumes:
       - grafana-data:/var/lib/grafana
+    networks:
+      - traefik-proxy
 # Explicitly define the persistent volume for your data storage
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+
 volumes:
-  grafana-data:
-    external: true
+ grafana-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_GRAFANA}
+      o: bind
