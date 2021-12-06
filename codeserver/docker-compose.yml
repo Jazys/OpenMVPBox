@@ -1,0 +1,46 @@
+version: "2.1"
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server
+    container_name: code-server
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.codeserver.rule=Host(`${URL_CODESERVER}`)
+      - traefik.http.routers.codeserver.entrypoints=websecure
+      - traefik.http.routers.codeserver.tls=true
+      - traefik.http.routers.codeserver.tls.certresolver=lets-encrypt
+#      - traefik.http.routers.codeserver.middlewares=codeserver-auth
+#      - "traefik.http.middlewares.codeserver-auth.basicauth.users=$creditentials"
+      - traefik.http.routers.codeserver.service=codeserver-srv
+      - traefik.http.services.codeserver-srv.loadbalancer.server.port=8443
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    networks:
+      - traefik-proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - PASSWORD=${PASSWORD} #optional
+#      - HASHED_PASSWORD= #optional
+      - SUDO_PASSWORD=abc #optional
+#      - SUDO_PASSWORD_HASH= #optional
+#      - PROXY_DOMAIN=code-server.my.domain #optional
+    volumes:
+      - datahcodeserver:/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+ #   ports:
+ #     - 5678:8443
+    restart: unless-stopped
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+ datahcodeserver:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_CODESERVER}
+      o: bind
