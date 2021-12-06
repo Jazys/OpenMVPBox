@@ -16,4 +16,4 @@ fi
 
 sed -i '/URL_BOTPRESS/c\URL_BOTPRESS='$domaine .env
 
-docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d
