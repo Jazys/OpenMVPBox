@@ -4,7 +4,14 @@
 
 mkdir -p postgres-data
 
-read -p "Indicate your domain for wiki : " domaine
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for WikiJS: " domaine
+else
+      domaine=$1
+      echo 'domaine for WikiJS is '$domaine
+fi
+
 sed -i '/URL_WIKI=/c\URL_WIKI='$domaine .env 
 
 

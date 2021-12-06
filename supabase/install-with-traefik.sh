@@ -35,4 +35,4 @@ sed -i '/ANON_KEY=/c\ANON_KEY='$anon_key .env
 sed -i '/SERVICE_ROLE_KEY/c\SERVICE_ROLE_KEY='$service_role_key .env
 
 
-docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d

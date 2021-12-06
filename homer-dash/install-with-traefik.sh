@@ -40,4 +40,4 @@ sed -i '/URL_FILEBROSWER/c\URL_FILEBROSWER='$domaine2 .env
 
 echo "Login/admin for "$domaine2 " are admin and admin  please change your password " >> /tmp/toSendInfoByMail
 
-docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d

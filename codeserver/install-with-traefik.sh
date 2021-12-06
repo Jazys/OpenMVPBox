@@ -22,4 +22,4 @@ echo "Password for "$domaine " is "$password " " >> /tmp/toSendInfoByMail
 sed -i '/PASSWORD/c\PASSWORD='$password .env
 
 
-docker-compose up
+docker-compose up -d

@@ -15,4 +15,4 @@ fi
 
 sed -i '/URL_MATOMO/c\URL_MATOMO='$domaine .env
 
-docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d

@@ -33,4 +33,4 @@ sed -i '/CALENDSO_ENCRYPTION_KEY=/c\CALENDSO_ENCRYPTION_KEY='$jwtcaldav .env
 jwt=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 30)
 sed -i '/JWT_SECRET=/c\JWT_SECRET='$jwt .env
 
-docker-compose -f docker-compose-with-traefik.yml --env-file .env up 
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d
