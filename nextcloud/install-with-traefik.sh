@@ -5,7 +5,14 @@
 mkdir -p mariadb-data
 mkdir -p data
 
-read -p "Indicate your domain for nextcloud : " domaine
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for nextcloud: " domaine
+else
+      domaine=$1
+      echo 'domaine for nextcloud is '$domaine
+fi
+
 sed -i '/URL_NEXTCLOUD=/c\URL_NEXTCLOUD='$domaine .env 
 
 
