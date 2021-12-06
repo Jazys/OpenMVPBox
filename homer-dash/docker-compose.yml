@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  homer:
+    image: b4bz/homer:latest
+    restart: always
+    volumes:
+      - datahomer:/www/assets
+    environment:
+      - UID=1
+      - GID=1
+    ports:
+      - 8085:8080
+
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser:latest
+    volumes:
+      - datahomer:/srv  # Arborescence qui sera visible de l'utilisateur par défaut
+      - ./database.db:/database.db
+    ports:
+      - 8084:80  # Port pour accéder à l'interface web de File Browser
+    restart: unless-stopped
+
+    
+volumes:
+ datahomer:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_HOMER}
+      o: bind
+
+ datafilebro:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_FILEBRO}
+      o: bind
+
