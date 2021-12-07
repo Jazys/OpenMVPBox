@@ -1,0 +1,80 @@
+version: "3"
+services:
+  docusaurus:
+    image: awesometic/docusaurus
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.docusaurus-dev.rule=Host(`dev.${URL_DOCUSAURUS}`)
+      - traefik.http.routers.docusaurus-dev.entrypoints=websecure
+      - traefik.http.routers.docusaurus-dev.tls=true
+      - traefik.http.routers.docusaurus-dev.tls.certresolver=lets-encrypt
+      - traefik.http.routers.docusaurus-dev.middlewares=docusaurus-dev-auth
+      - "traefik.http.middlewares.docusaurus-dev-auth.basicauth.users=admin:$$apr1$$Qb6Mpulb$$334hONKmonYJjJyqXJb3C0"      
+      - traefik.http.routers.docusaurus-dev.service=docusaurus-dev-srv
+      - traefik.http.services.docusaurus-dev-srv.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    environment:
+      - TARGET_UID=1000
+      - TARGET_GID=1000
+      - AUTO_UPDATE=true
+      - WEBSITE_NAME="${WEBSITE_NAME}"
+      - TEMPLATE=classic-db
+    volumes:
+      - docusaurus-data:/docusaurus
+    networks:
+      - traefik-proxy
+  
+  docusaurus-prod:
+    image: awesometic/docusaurus
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.docusaurus-prod.rule=Host(`${URL_DOCUSAURUS}`)
+      - traefik.http.routers.docusaurus-prod.entrypoints=websecure
+      - traefik.http.routers.docusaurus-prod.tls=true
+      - traefik.http.routers.docusaurus-prod.tls.certresolver=lets-encrypt
+      - traefik.http.routers.docusaurus-prod.service=docusaurus-prod-srv
+      - traefik.http.services.docusaurus-prod-srv.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    environment:
+      - TARGET_UID=1000
+      - TARGET_GID=1000
+      - AUTO_UPDATE=true
+      - WEBSITE_NAME="${WEBSITE_NAME}"
+      - TEMPLATE=classic-db
+      - RUN_MODE=production
+    volumes:
+      - docusaurus-data:/docusaurus
+    networks:
+      - traefik-proxy
+
+  filebrowser:
+    container_name: filebrowser-docu
+    image: filebrowser/filebrowser:latest
+    volumes:
+      - docusaurus-data:/srv  
+      - ./database.db:/database.db
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser-docu.rule=Host(`file.${URL_DOCUSAURUS}`)
+      - traefik.http.routers.filebrowser-docu.entrypoints=websecure
+      - traefik.http.routers.filebrowser-docu.tls=true
+      - traefik.http.routers.filebrowser-docu.tls.certresolver=lets-encrypt
+      - traefik.http.routers.filebrowser-docu.service=filebrowser-docu-srv
+      - traefik.http.services.filebrowser-docu-srv.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    restart: unless-stopped
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+ docusaurus-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DOCUSAURUS}
+      o: bind

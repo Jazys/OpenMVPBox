@@ -1,0 +1,14 @@
+version: "3"
+services:
+  docusaurus:
+    image: awesometic/docusaurus
+    volumes:
+      - docusaurus-data:/docusaurus
+      
+volumes:
+ docusaurus-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DOCUSAURUS}
+      o: bind
