@@ -1,0 +1,32 @@
+version: "3"
+services:
+  hoppscotch:
+    image: hoppscotch/hoppscotch:latest
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hoppscotch.rule=Host(`${URL_HOPP}`)
+      - traefik.http.routers.hoppscotch.entrypoints=websecure
+      - traefik.http.routers.hoppscotch.tls=true
+      - traefik.http.routers.hoppscotch.tls.certresolver=lets-encrypt
+      - traefik.http.routers.hoppscotch.service=hoppscotch-srv
+      - traefik.http.services.hoppscotch-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    volumes:
+      - hoppscotch-data:/app
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+ hoppscotch-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_HOPPSCOTH}
+      o: bind
+

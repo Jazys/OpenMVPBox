@@ -1,0 +1,23 @@
+version: "3"
+services:
+  tabler:
+    image: hoppscotch/hoppscotch:latest
+    ports:
+      - 9018:3000
+#    networks:
+#      - traefik-proxy
+
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+ hoppscotch-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_HOPPSCOTH}
+      o: bind
+
