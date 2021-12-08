@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+
+  outline:
+    container_name: outline-outline
+    image: outlinewiki/outline:latest
+    command: sh -c "yarn db:migrate --env production-ssl-disabled && yarn start"
+    env_file: ./.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.outline.rule=Host(`${URL_OUTLINE}`)
+      - traefik.http.routers.outline.entrypoints=websecure
+      - traefik.http.routers.outline.tls=true
+      - traefik.http.routers.outline.tls.certresolver=lets-encrypt
+      - traefik.http.routers.outline.service=outline-srv
+      - traefik.http.services.outline-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    networks:
+      - traefik-proxy
+      - common
+
+  postgres:
+    container_name: outline-postgres
+    image: postgres:13.2
+    ports:
+      - 5432:5432
+    environment:
+      - TZ
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_INITDB_ARGS
+    networks:
+      - common
+    volumes:
+      - outline-postgres-data:/var/lib/postgresql/data
+      
+
+  redis:
+    container_name: outline-redis
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    networks:
+      - common
+    volumes:
+      - outline-redis-data:/data
+
+volumes:
+ outline-redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_REDIS_OUTLINE}
+      o: bind
+
+ outline-postgres-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DB_OUTLINE}
+      o: bind
+      
+networks:
+  common:
+    driver: bridge
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
