@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  app:
+    image: mattermost/mattermost-team-edition:6.0.2
+    restart: always
+    volumes:
+      - matter-data:/mattermost/data
+      - matter-config:/mattermost/config
+      - matter-plugins:/mattermost/plugins 
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web-matter.rule=Host(`${URL_MATTERMOST}`)
+      - traefik.http.routers.web-matter.entrypoints=websecure
+      - traefik.http.routers.web-matter.tls=true
+      - traefik.http.routers.web-matter.tls.certresolver=lets-encrypt
+      - traefik.http.routers.web-matter.service=web-matter-srv
+      - traefik.http.services.web-matter-srv.loadbalancer.server.port=8065
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    environment:
+      - MM_SQLSETTINGS_DATASOURCE=postgres://mattermost:myp@ssw0rd@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
+      - MM_SERVICESETTINGS_SITEURL=https://${URL_MATTERMOST}
+      - MM_LOCALIZATIONSETTINGS_DEFAULTCLIENTLOCALE=fr
+      - MM_LOCALIZATIONSETTINGS_AVAILABLELOCALES=fr
+      - MM_EMAILSETTINGS_ENABLEPREVIEWMODEBANNER=false
+      - MM_PLUGINSETTINGS_ENABLEUPLOADS=true
+      - MM_TEAMSETTINGS_MAXUSERSPERTEAM=100
+      - edition=team
+      - TZ=UTC
+    networks:
+      - traefik-proxy
+      - common
+
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=mattermost
+      - POSTGRES_USER=mattermost
+      - POSTGRES_PASSWORD=myp@ssw0rd
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "mattermost"]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - common
+
+networks:
+  common:
+    driver: bridge
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+ postgres-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DB_MATTER}
+      o: bind
+
+ matter-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_MATTER}
+      o: bind
+
+ matter-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_CFG_MATTER}
+      o: bind
+      
+ matter-plugins:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PLUGINS_MATTER}
+      o: bind
