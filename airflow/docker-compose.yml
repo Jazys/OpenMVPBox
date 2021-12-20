@@ -1,0 +1,123 @@
+version: '2.2'
+services:
+    redis:
+        image: 'redis:5.0.5'
+        command: redis-server --requirepass redispass
+
+    postgres:
+        image: postgres:9.6
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        volumes:
+            - postgres-ariflow:/var/lib/postgresql/data/pgdata
+
+    webserver:
+        image: puckel/docker-airflow:2.0.0
+        restart: always
+        depends_on:
+            - postgres
+            - redis
+        environment:
+            - LOAD_EX=n
+            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+            - EXECUTOR=Celery
+             - POSTGRES_USER=airflow
+             - POSTGRES_PASSWORD=airflow
+             - POSTGRES_DB=airflow
+             - REDIS_PASSWORD=redispass
+        volumes:
+            - dags-ariflow:/usr/local/airflow/dags
+            - data-ariflow:/usr/local/airflow/data
+            - plugins-ariflow:/usr/local/airflow/plugins
+            - ./requirements.txt:/requirements.txt
+        ports:
+            - "8085:8080"
+        command: webserver
+        healthcheck:
+            test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+            interval: 30s
+            timeout: 30s
+            retries: 3
+
+    flower:
+        image: puckel/docker-airflow:2.0.0
+        restart: always
+        depends_on:
+            - redis
+        environment:
+            - EXECUTOR=Celery
+            - REDIS_PASSWORD=redispass
+        ports:
+            - "5555:5555"
+        command: celery flower
+
+    scheduler:
+        image: puckel/docker-airflow:2.0.0
+        restart: always
+        depends_on:
+            - webserver
+        volumes:
+            - dags-ariflow:/usr/local/airflow/dags
+            - data-ariflow:/usr/local/airflow/data
+            - ./requirements.txt:/requirements.txt
+            - plugins-ariflow:/usr/local/airflow/plugins
+        environment:
+            - LOAD_EX=n
+            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+            - EXECUTOR=Celery
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+            - REDIS_PASSWORD=redispass
+        command: scheduler
+
+    worker:
+        image: puckel/docker-airflow:2.0.0
+        restart: always
+        depends_on:
+            - scheduler
+        volumes:
+            - dags-ariflow:/usr/local/airflow/dags
+            - data-ariflow:/usr/local/airflow/data
+            - ./requirements.txt:/requirements.txt
+            - plugins-ariflow:/usr/local/airflow/plugins
+        environment:
+            - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+            - EXECUTOR=Celery
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+            - REDIS_PASSWORD=redispass
+        command: celery worker
+
+volumes:
+ dags-ariflow:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DAGS_AIRFLOW}
+      o: bind
+
+ data-ariflow:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_AIRFLOW}
+      o: bind
+
+ plugins-ariflow:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PLUGIN_AIRFLOW}
+      o: bind
+
+ postgres-ariflow:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DB_AIRFLOW}
+      o: bind
