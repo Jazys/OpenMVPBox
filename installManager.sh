@@ -10,6 +10,8 @@ domaineTraefik=""
 loginTraefik=""
 passTraefik=""
 domainePortainer=""
+localip=$(ip -4 addr show enp3s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+domaineName=""
 
 if [ -z "$1" ]
 then
@@ -25,7 +27,12 @@ else
       echo 'all domain  are ok'
 fi
 
+domaineName=$(echo $domaineTraefik | cut --complement -d'.' -f 1)
+
 sed -i 's/xxx.xxx/'$domaineTraefik'/g' traefik/conf/traefik_dynamic.toml
+sed -i 's/yyy.yyy/api.'$domaineName'/g' traefik/conf/traefik_dynamic.toml
+sed -i 's/@ip/'$localip'/g' traefik/conf/traefik_dynamic.toml
+
 
 htpasswd -b -c ./password $loginTraefik $passTraefik
 
@@ -35,6 +42,7 @@ echo $EncryptedPassword
 
 #./replaceInFile.sh traefik/conf/traefik_dynamic.toml login:passcrypt $EncryptedPassword 
 sed -i '/admin/c\"'$EncryptedPassword'"' traefik/conf/traefik_dynamic.toml
+
 
 rm ./password
 

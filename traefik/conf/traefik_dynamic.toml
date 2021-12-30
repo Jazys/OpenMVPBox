@@ -11,3 +11,15 @@
   [http.routers.api.tls]
     certResolver = "lets-encrypt"
 
+[http.routers.api-omvpb]
+  rule = "Host(`yyy.yyy`)"
+  entrypoints = ["websecure"]
+  service = "api-omvpb"
+  [http.routers.api-omvpb.tls]
+    certResolver = "lets-encrypt"
+
+[http.services]
+  [http.services.api-omvpb.loadBalancer]
+    passHostHeader = true
+    [[http.services.api-omvpb.loadBalancer.servers]]
+      url = "http://@ip:9080/"
