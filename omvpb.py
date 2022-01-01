@@ -53,8 +53,9 @@ def auth(valid=validateKey):
     return _auth
 
 def readApkiKey(pathfile):
+    global HASH_API_KEY
     file = open(pathfile, "r")
-    HASH_API_KEY=str(file.readline())
+    HASH_API_KEY=file.readline().strip()
     print (HASH_API_KEY)
     file.close()
 
