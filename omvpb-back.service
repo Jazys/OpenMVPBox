@@ -1,0 +1,11 @@
+[Unit]
+Description=A backend to control creation of service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /home/ubuntu/stacks/omvpb.py
+
+[Install]
+WantedBy=multi-user.target

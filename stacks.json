@@ -1,0 +1,93 @@
+{
+    "version":1,
+    "stacks":[
+        {
+            "id": 1,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/n8n",
+            "title": "n8n",
+            "description": "Automate your task",
+            "categories": [
+                "Automation"
+            ],
+            "logo": "",
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "t12.nuage.omvpb.ovh"
+                },
+                {
+                    "name": "admin",
+                    "value": "admin"
+                },
+                {
+                    "name": "password",
+                    "value": "pass"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/focalboard",
+            "title": "focalboard",
+            "description": "Alternative to notion",
+            "categories": [
+                "Manage"
+            ],
+            "logo": "",
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox/tree/main/focalboard",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "t48.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 3,
+            "type": 2,
+            "installScript": "git",
+            "enable": "yes",
+            "pathLocalDirStack":"",
+            "title": "git",
+            "description": "git project",
+            "categories": [
+                "Git repo"
+            ],
+            "logo": "",
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "git url",
+                    "value": "https://github.com/Jazys/TempplateVueJsDjangoSaas"
+                },
+                {
+                    "name": "docker-compose file",
+                    "value": "docker-compose.yml"
+                },
+                {
+                    "name": "env file",
+                    "value": ".env"
+                }                
+            ]
+        }
+    ]
+}

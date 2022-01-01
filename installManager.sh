@@ -1,5 +1,20 @@
 #!/bin/bash
 
+mkdir -p /home/ubuntu/stacks
+
+apkey=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 23)
+apkeyhash=$(htpasswd -nb -B admin $apkey | cut -d ":" -f 2)
+
+echo "apkey for mananging stack via rest service "$apkeyhash
+echo $apkeyhash > /root/OpenMVPBox/apiKey
+
+cp omvpb.py /home/ubuntu/stacks
+cp omvpb-back.service /etc/systemd/system
+
+systemctl daemon-reload
+systemctl enable omvpb-back.service
+systemctl start omvpb-back.service
+
 chmod +x traefik/install.sh
 
 pushd traefik
