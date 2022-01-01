@@ -23,7 +23,7 @@ fileStack.close()
 socket.gethostbyname(socket.gethostname())
 
 #get hashpassword A6cS0Gi6rEDJPZzjeM3q
-HASH_API_KEY="$apr1$olft3arc$p05VGVzcFENFUvqbrd5LL0"
+#HASH_API_KEY="$apr1$olft3arc$p05VGVzcFENFUvqbrd5LL0"
 
 _allow_origin = '*'
 _allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
@@ -54,7 +54,7 @@ def auth(valid=validateKey):
 
 def readApkiKey(pathfile):
     file = open(pathfile, "r")
-    HASH_API_KEY=file.readline()
+    HASH_API_KEY=str(file.readline())
     print (HASH_API_KEY)
     file.close()
 
@@ -77,10 +77,10 @@ def changeVolumePath(pathfile, patternToFind, replacement):
 def verifyApiKey():
     apkey=request.headers['api-key']
     toReturn=""
-    if(apkey==HASH_API_KEY):
+    if(str(apkey)==str(HASH_API_KEY)):
         toReturn={"api-key": "success"} 
     else:
-        toReturn={"localIp": "error"} 
+        toReturn={"api-key": "error"} 
     return toReturn
   
 
@@ -223,5 +223,5 @@ if __name__ == '__main__':
     readApkiKey("/root/OpenMVPBox/apiKey")
 
     #run service
-    bottle.run(host=socket.gethostbyname(socket.gethostname()), port=8084)
+    bottle.run(host=socket.gethostbyname(socket.gethostname()), port=9080)
 
