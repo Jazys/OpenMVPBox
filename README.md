@@ -11,9 +11,9 @@ Minimal dockers on your OpenMVPBox are :
 
 These stacks are used for managing service in our VPS.
 
-For minimal installation
+For minimal installation (root user for moment)
 
-    git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
+    cd /root && git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
     chmod +x makeScriptExec.sh && ./automaticInstall.sh SubDomainOrDomain
 
 Ater choose your stack and run the installXX.sh script
@@ -139,9 +139,9 @@ Each directory the .env file includes your login/password.
 
 Clone the project on your VPS server (Ubuntu for the moment).
 
-For minimal installation
+For minimal installation (root user for moment)
 
-    git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
+    cd /root && git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
     chmod +x makeScriptExec.sh && ./automaticInstall.sh SubDomainOrDomain
 
 Read in console, the different password
