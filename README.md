@@ -7,6 +7,16 @@ OpenMVPBox is **serverless**, all stacks are running with docker system.
 Minimal dockers on your OpenMVPBox are :
 * **Traefik** for creating redirection and secured connexion
 * **Portainer** for managing your stack ( restart a docker for example)
+* **A service Rest Api** for creating stack directly with frontend (experimental) (available on api.yourdomainename)
+
+These stacks are used for managing service in our VPS.
+
+For minimal installation
+
+    git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
+    chmod +x automaticInstall.sh && ./automaticInstall.sh SubDomainOrDomain
+
+Ater choose your stack and run the installXX.sh script
 
 **Easy to use !** 
 
@@ -41,18 +51,22 @@ For maintaining an Opensource project, you can contribute :
 Some stacks are not entirely integrated in a script
 
 Stack:
-- **parse** - **nocodb** - appwrite  -directus  ==> backend or database
+- **parse** - **nocodb** -**supabase**- appwrite  -directus  ==> backend or database
+- **matermost** ==> to collaborate with your team and audience (alternative to slack)
 - **penpot** ==> creating UI and mockup
 - **n8n** - nodered (like for low-level industry) ==> create automation (my favorite tool)
 - **uniflow** - Automate your recurring tasks once, run it everywhere. (default account : admin@uniflow.io / admin)
 - **silex** - **appsmith** ==> create web site or UI dashboard
-- **grav** - **ghost** ==> create blog site
-- **wikijs** - **codimd** - outline ==> share note and wiki
+- **wordpress** - **grav** - **ghost** ==> create blog site
+- **focalboard** ==> share note
+- **wikijs** - **codimd** - **docusaurus** - outline ==> share note and wiki
 - **nextcloud** ==> manage/store file and CRM (note, invoice, kanban)
 - **minio** ==> store/manage big file (like S3)
+- **calc** ==> to share your calendar
+- **jitsi** ==> for video conference
 - discourse - flarum ==> Forum for discuss with client or prospect
 - **automatTest** ==> special tool for making automate test Frontend or RESTAPI
-- botpress ==> create your bot
+- **botpress** ==> create your bot
 - **carbonejs** ==> create your document pdf, doc, xls using template with RESTAPI (special stack)
 - **mqtt** ==> a broker that
 - **strapi** ==> your favorite headless CMS
@@ -62,13 +76,13 @@ Stack:
 All tools are open-source and can be self-hosted.
 
 For Non confidential data, use free online service :
-- Calendar : use Calendly ou GoogleCalendar
+- Calendar : use Calendly ou GoogleCalendar or calc.com
 - Password manager : use Bitwarden online (data are encrypted), can be exporterd (make it regularly).Don't be worried to use it
 Bitwarden can be used as a self-hosted service but need to be managed and secured !!
 - Jitsi : for realtime communication like GoogleMeet, Teams,.... You can use the online service or self hosted service
 
-For business contact : (not included)
-- GoogleCalendar/Calendly ==> book a call
+For business contact : (included)
+- Calc/GoogleCalendar/Calendly ==> book a call
 - Jisti ==> have a video call
 
 Productivity : (not include)
@@ -82,6 +96,7 @@ Productivity : (not include)
 ### Domain Name creation
 Create your domaine name using https://us.ovhcloud.com/.
 Follow this link https://docs.ovh.com/fr/api/api-premiers-pas/ for creating your Token that allows you to create dynammically subdomains (sorry for non-French people, have a look at the picture only).
+Or use your preferred provider.
 
 ### VPS creation
 You can use your favorite provider, for me it's DigitalOcean.
@@ -123,6 +138,14 @@ Each directory the .env file includes your login/password.
 ## For developper
 
 Clone the project on your VPS server (Ubuntu for the moment).
+
+For minimal installation
+
+    git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
+    chmod +x automaticInstall.sh && ./automaticInstall.sh SubDomainOrDomain
+
+Read in console, the different password
+Credidentials information are in /tmp/toSendByMail 
 
     cd OpenMVPBox
     chmod +x makeScriptExec

@@ -1,19 +1,6 @@
 #!/bin/bash
 
-mkdir -p /home/ubuntu/stacks
-
-apkey=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 23)
-apkeyhash=$(htpasswd -nb -B admin $apkey | cut -d ":" -f 2)
-
-echo "apkey for mananging stack via rest service "$apkeyhash
-echo $apkeyhash > /root/OpenMVPBox/apiKey
-
-cp omvpb.py /home/ubuntu/stacks
-cp omvpb-back.service /etc/systemd/system
-
-systemctl daemon-reload
-systemctl enable omvpb-back.service
-systemctl start omvpb-back.service
+./installRestService.sh $1
 
 chmod +x traefik/install.sh
 
@@ -42,11 +29,7 @@ else
       echo 'all domain  are ok'
 fi
 
-domaineName=$(echo $domaineTraefik | cut --complement -d'.' -f 1)
-
 sed -i 's/xxx.xxx/'$domaineTraefik'/g' traefik/conf/traefik_dynamic.toml
-sed -i 's/yyy.yyy/api.'$domaineName'/g' traefik/conf/traefik_dynamic.toml
-sed -i 's/@ip/'$localip'/g' traefik/conf/traefik_dynamic.toml
 
 
 htpasswd -b -c ./password $loginTraefik $passTraefik
