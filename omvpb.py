@@ -8,6 +8,25 @@ import socket
 import shutil
 import requests
 
+class EnableCors(object):
+    name = 'enable_cors'
+    api = 2
+
+    def apply(self, fn, context):
+        def _enable_cors(*args, **kwargs):
+            # set CORS headers
+            response.headers["Accept"]='application/json'
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
+            response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token, api-key'
+
+            if bottle.request.method != 'OPTIONS':
+                # actual request; reply with the actual response
+                return fn(*args, **kwargs)
+
+        return _enable_cors
+
+
 #const
 HASH_API_KEY=""
 DIR_OMVPB="/root/OpenMVPBox"
@@ -24,17 +43,6 @@ socket.gethostbyname(socket.gethostname())
 
 #get hashpassword A6cS0Gi6rEDJPZzjeM3q
 #HASH_API_KEY="$apr1$olft3arc$p05VGVzcFENFUvqbrd5LL0"
-
-_allow_origin = '*'
-_allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
-_allow_headers = 'Authorization, Origin, Accept, Content-Type, X-Requested-With'
-
-def enable_cors():
-    '''Add headers to enable CORS'''
-    response.headers['Access-Control-Allow-Origin'] = _allow_origin
-    response.headers['Access-Control-Allow-Methods'] = _allow_methods
-    response.headers['Access-Control-Allow-Headers'] = _allow_headers
-  
 def validateKey():
     apkey=request.headers['api-key']
     if(apkey==HASH_API_KEY):
@@ -72,9 +80,12 @@ def changeVolumePath(pathfile, patternToFind, replacement):
     f.write(allLine)
     f.close()
 
+app = application = bottle.default_app()
+app.install(EnableCors())
+                        
 #window.btoa for javascript
 #For testing connexion with Api 
-@get('/verifyApiKey')
+@app.route('/verifyApiKey', method=['OPTIONS', 'GET'])
 def verifyApiKey():
     apkey=request.headers['api-key']
     toReturn=""
@@ -86,14 +97,14 @@ def verifyApiKey():
   
 
 #get local ip
-@get('/myIp')
+@app.route('/myIp', method=['OPTIONS', 'GET'])
 @auth()
 def myLocalIp():
     toReturn={"localIp": socket.gethostbyname(socket.gethostname())}    
     return toReturn
 
 #get public ip for NDD
-@get('/myIpPublic')
+@app.route('/myIpPublic', method=['OPTIONS', 'GET'])
 @auth()
 def myPublicIp():
     url = "https://ifconfig.co"
@@ -104,13 +115,13 @@ def myPublicIp():
     return toReturn
 
 #get all stack available
-@get('/allStack')
+@app.route('/allStack', method=['OPTIONS', 'GET'])
 def getAllStacks():   
     toReturn = allStacksJson
     return toReturn
 
 #get all installed stack
-@get('/installedStack')
+@app.route('/installedStack', method=['OPTIONS', 'GET'])                                             
 @auth()
 def getAllSintalledStack():  
     dirList = os.listdir(DIR_CURRENT_STACKS) 
@@ -118,10 +129,11 @@ def getAllSintalledStack():
     for dir in dirList:
         if(os.path.isdir(os.path.join(DIR_CURRENT_STACKS,dir))):
             toReturn.append(dir)
-    return json.dumps(toReturn)
+    return json.dumps({"stacksInstalled": toReturn})
 
 #create stack
-@post('/create')   
+@app.route('/create', method=['OPTIONS', 'POST'])
+@auth()   
 def createStack():   
 
     allCommandToRunToDeploy=[]
@@ -159,7 +171,8 @@ def createStack():
    
     return ""
 
-@post('/createRepo')   
+@app.route('/createRepo', method=['OPTIONS', 'POST'])
+@auth()      
 def createStackRepo():   
     allCommandToRunToDeploy=[]
     tmpStack={}  
@@ -200,7 +213,7 @@ def createStackRepo():
 
 #delete stack
 @auth()
-@delete('/delete/<dir_name>') 
+@app.route('/delete/<dir_name>', method=['OPTIONS', 'DELETE'])
 def deleteStack(dir_name):
     #stoppe docker
     os.chdir(os.path.join(DIR_CURRENT_STACKS,dir_name))
@@ -215,9 +228,7 @@ def deleteStack(dir_name):
     
     return ""
 
-#settings conf
-app = application = bottle.default_app()
-app.add_hook('after_request', enable_cors)
+
 
 if __name__ == '__main__':
     #set apiKey
