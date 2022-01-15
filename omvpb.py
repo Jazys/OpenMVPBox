@@ -116,6 +116,7 @@ def myPublicIp():
 
 #get all stack available
 @app.route('/allStack', method=['OPTIONS', 'GET'])
+@auth()
 def getAllStacks():   
     toReturn = allStacksJson
     return toReturn
@@ -125,10 +126,42 @@ def getAllStacks():
 @auth()
 def getAllSintalledStack():  
     dirList = os.listdir(DIR_CURRENT_STACKS) 
-    toReturn=[]    
+    toReturn=[]
+
+    #to copy existing stack
+    cpyallStacksJson= json.loads(json.dumps(allStacksJson))
+
     for dir in dirList:
         if(os.path.isdir(os.path.join(DIR_CURRENT_STACKS,dir))):
-            toReturn.append(dir)
+            env=[]
+            dirTmpStack=os.path.join(DIR_CURRENT_STACKS,dir)
+            dirList2 = os.listdir(dirTmpStack) 
+            for afilename in dirList2:
+                #print(afilename)
+                if afilename == ".env":              
+                    file = open(os.path.join(dirTmpStack,afilename), "r")
+                    alline=file.readlines()
+                    print(alline)
+
+                    for aLine in alline:
+                        aLine=aLine.strip()
+                        if aLine!="":
+                            splitLine=aLine.split("=")
+                            env.append({ "name":splitLine[0], "value":splitLine[1]})
+                    print(env)
+            
+            indLastUnderscore=dir.rfind('_')
+            titleFromDir=dir[indLastUnderscore+1:]
+            print(titleFromDir)
+
+            for aStack in cpyallStacksJson["stacks"]:
+                if aStack["title"]==titleFromDir:
+                    aStack["env"]=env
+                    aStack["userId"]=dir[:dir.find('_')]
+                    print(aStack)
+                    break
+
+            toReturn.append(aStack)
     return json.dumps({"stacksInstalled": toReturn})
 
 #create stack
@@ -235,5 +268,5 @@ if __name__ == '__main__':
     readApkiKey("/root/OpenMVPBox/apiKey")
 
     #run service
-    bottle.run(host=socket.gethostbyname(socket.gethostname()), port=9080)
+    bottle.run(host=socket.gethostbyname(socket.gethostname()), port=9081)
 
