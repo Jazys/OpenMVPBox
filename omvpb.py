@@ -268,5 +268,5 @@ if __name__ == '__main__':
     readApkiKey("/root/OpenMVPBox/apiKey")
 
     #run service
-    bottle.run(host=socket.gethostbyname(socket.gethostname()), port=9080)
+    bottle.run(host="@ip", port=9080)
 
