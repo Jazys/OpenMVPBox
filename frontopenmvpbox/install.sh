@@ -9,7 +9,7 @@ echo "URL_FRONT=front."$1 > .env
 echo "VITE_URL_SRV=https://api."$1 >> .env
 echo "NETWORK_TRAEFIK=traefik-proxy" >> .env
 
-echo "creditentials are same as traefik service ">> /tmp/toSendInfoByMail
+echo "Frontend creditentials are same as traefik service ">> /tmp/toSendInfoByMail
 
 docker-compose up -d
 

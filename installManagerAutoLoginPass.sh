@@ -12,7 +12,7 @@ popd
 
 pushd frontopenmvpbox
 domaineName=$(echo $1 | cut --complement -d'.' -f 1)
-./install.sh domaineName
+./install.sh $domaineName
 popd
 
 
