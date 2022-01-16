@@ -4,6 +4,8 @@
 
 mkdir -p /home/ubuntu/stacks
 
+domaineName=$(echo $1 | cut --complement -d'.' -f 1)
+
 apkey=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 23)
 echo $apkey
 
@@ -26,8 +28,6 @@ testEnp3s0=$(ip a |grep enp3s0 | wc -l)
 if (( testEnp3s0 >= 1 )); then
   localip=$(ip -4 addr show testEnp3s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 fi
-
-domaineName=$(echo $1 | cut --complement -d'.' -f 1)
 
 sed -i 's/yyy.yyy/api.'$domaineName'/g' traefik/conf/traefik_dynamic.toml
 sed -i 's/@ip/'$localip'/g' traefik/conf/traefik_dynamic.toml
