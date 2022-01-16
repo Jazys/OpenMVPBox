@@ -87,7 +87,7 @@
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/appsmith",
-            "title": "focalboard",
+            "title": "Appsmith",
             "description": "Alternative to retool",
             "categories": [
                 "UI dashboard"
@@ -127,7 +127,7 @@
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/nocodb",
-            "title": "focalboard",
+            "title": "NocoDB",
             "description": "Alternative to Airtable",
             "categories": [
                 "Manage and view Data"
