@@ -49,3 +49,9 @@ mkdir -p portainer/data
 
 docker-compose -f traefik/docker-compose.yml --env-file traefik/.env up -d
 docker-compose -f portainer/docker-compose.yml --env-file portainer/.env up -d
+
+pushd frontopenmvpbox
+domaineName=$(echo $1 | cut --complement -d'.' -f 1)
+./install.sh domaineName
+popd
+
