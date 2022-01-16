@@ -21,7 +21,7 @@ passwordCmdPortainerDoc=$(htpasswd -nb -B admin $password | cut -d ":" -f 2)
 echo $passwordCmdPortainerDoc
 sed -i '/PASSWORD_PORTAINER=/c\PASSWORD_PORTAINER='$passwordCmdPortainerDoc'' .env
 
-echo "Login/admin for "$domainePortainer " are admin and "$password " " >> /tmp/toSendInfoByMail
+echo "Login/admin for https://"$domainePortainer " are admin and "$password " " >> /tmp/toSendInfoByMail
 
 
 

@@ -10,7 +10,7 @@ echo $apkey
 apkeyhash=$(htpasswd -nb -B admin $apkey | cut -d ":" -f 2)
 
 echo "apkey for mananging stack via rest service "$apkeyhash
-echo "apkey for mananging stack via rest service "$apkeyhash >> /tmp/toSendInfoByMail
+echo "For https://api."$domaineName" the apkey for mananging stack via rest service is "$apkeyhash " ">> /tmp/toSendInfoByMail
 echo $apkeyhash > /root/OpenMVPBox/apiKey
 
 localip=$(ip -4 addr show enp3s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')

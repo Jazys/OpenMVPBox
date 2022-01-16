@@ -12,7 +12,19 @@
             "categories": [
                 "Automation"
             ],
-            "logo": "",
+            "logo": "https://th.bing.com/th/id/OIF.GGCz1vcwXBEeDEcuXjLkjw?w=167&h=180&c=7&r=0&o=5&pid=1.7",
+            "video":[
+                {
+                    "desc": "Scraping",
+                    "link": "https://www.youtube.com/watch?v=Rt9LsPeMKk4&t=5s"
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "Introduction",
+                    "link": "https://batisseurdunumerique.fr/blog/fr/blog/n8n"
+                }
+            ],
             "repository": {
                 "url": "https://github.com/Jazys/OpenMVPBox",
                 "stackfile": "docker-compose-with-traefik.yml",
@@ -44,7 +56,19 @@
             "categories": [
                 "Manage"
             ],
-            "logo": "",
+            "logo": "https://www.saashub.com/images/app/service_logos/171/uacqv6n1ludc/large.png?1616033256",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
             "repository": {
                 "url": "https://github.com/Jazys/OpenMVPBox/tree/main/focalboard",
                 "stackfile": "docker-compose-with-traefik.yml",
@@ -59,6 +83,82 @@
         },
         {
             "id": 3,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/appsmith",
+            "title": "focalboard",
+            "description": "Alternative to retool",
+            "categories": [
+                "UI dashboard"
+            ],
+            "logo": "https://res.cloudinary.com/practicaldev/image/fetch/s--t-67JDbg--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/2071/83a969f0-9b4e-40e1-86a0-895c24e136bf.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "Intro",
+                    "link": "https://batisseurdunumerique.fr/blog/fr/blog/creation-dinterface-web-avec-appsmith"
+                }
+            ],
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox/tree/main/focalboard",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "Email admin",
+                    "value": "test@test.fr"
+                },
+                {
+                    "name": "domaine",
+                    "value": "t48.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 4,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/nocodb",
+            "title": "focalboard",
+            "description": "Alternative to Airtable",
+            "categories": [
+                "Manage and view Data"
+            ],
+            "logo": "https://www.nocodb.com/brand/favicon-64.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "Intro",
+                    "link": "https://batisseurdunumerique.fr/blog/fr/blog/nocodb-une-feuille-excel-de-calcul-intelligente"
+                }
+            ],
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox/tree/main/focalboard",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "t48.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 5,
             "type": 2,
             "installScript": "git",
             "enable": "yes",
@@ -69,6 +169,18 @@
                 "Git repo"
             ],
             "logo": "",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
             "repository": {
                 "url": "",
                 "stackfile": "docker-compose.yml",

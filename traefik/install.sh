@@ -20,7 +20,7 @@ fi
 
 sed -i 's/xxx.xxx/'$domaineTraefik'/g' conf/traefik_dynamic.toml
 
-echo "Login/admin for "$domaineTraefik " are "$loginTraefik " and "$password " " >> /tmp/toSendInfoByMail
+echo "Login/admin for https://"$domaineTraefik " are "$loginTraefik " and "$password " " >> /tmp/toSendInfoByMail
 
 htpasswd -b -c password $loginTraefik $password
 
