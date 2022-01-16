@@ -14,6 +14,7 @@
 [http.routers.api-omvpb]
   rule = "Host(`yyy.yyy`)"
   entrypoints = ["websecure"]
+  middlewares = ["testHeaderApi"]
   service = "api-omvpb"
   [http.routers.api-omvpb.tls]
     certResolver = "lets-encrypt"
@@ -23,3 +24,10 @@
     passHostHeader = true
     [[http.services.api-omvpb.loadBalancer.servers]]
       url = "http://@ip:9080/"
+
+[http.middlewares.testHeaderApi.headers]
+    accessControlAllowMethods= ["GET", "OPTIONS", "PUT", "POST", "DELETE"]
+    accessControlAllowOriginList = ["*"]
+    accessControlMaxAge = 100
+    addVaryHeader = true
+    accessControlAllowHeaders=["Origin", "Accept", "Content-Type", "X-Requested-With", "X-CSRF-Token", "api-key"]
