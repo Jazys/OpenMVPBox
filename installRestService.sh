@@ -10,6 +10,7 @@ echo $apkey
 apkeyhash=$(htpasswd -nb -B admin $apkey | cut -d ":" -f 2)
 
 echo "apkey for mananging stack via rest service "$apkeyhash
+echo "apkey for mananging stack via rest service "$apkeyhash >> /tmp/toSendInfoByMail
 echo $apkeyhash > /root/OpenMVPBox/apiKey
 
 cp omvpb.py /home/ubuntu/stacks
