@@ -7,6 +7,7 @@ import subprocess
 import socket
 import shutil
 import requests
+from bottle import static_file  
 
 class EnableCors(object):
     name = 'enable_cors'
@@ -261,7 +262,30 @@ def deleteStack(dir_name):
     
     return ""
 
+## not working
+@auth()
+@route('/download/<dir_name>', method=['OPTIONS', 'GET'])
+def download(dir_name):
+    os.system(f'tar -cvzf /tmp/{dir_name}.tar.gz /home/ubuntu/stacks/{dir_name}/*', cwd="", shell=True)  
+    return static_file(dir_name, root=f'/tmp/{dir_name}.tar.gz', download=dir_name)
 
+@auth()
+@route('/addfunc/<id_func>',  method=['OPTIONS', 'GET'])
+def setInfoWebhook(id_func):
+    url = "https://discord.com/api/webhooks/934013535623725116/qAUcf3VqDaIk2ndiI4qMGhyrlUOhoTfv9EjW0HFQJLeHQv5qp2t9Fxukpvg7S9tHaEEe"   
+    data = {
+        "content" : f'add func {id_func}',
+        "username" : "custom username"
+    }
+    result = requests.post(url, json = data)
+
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+    else:
+        print("Payload delivered successfully, code {}.".format(result.status_code))
+    return ""
 
 if __name__ == '__main__':
     #set apiKey

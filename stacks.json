@@ -159,16 +159,628 @@
         },
         {
             "id": 5,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/botpress",
+            "title": "Botpress",
+            "description": "Create your chatbot",
+            "categories": [
+                "Chatbot"
+            ],
+            "logo": "https://storage.googleapis.com/stateless-d2c-io/2019/10/6ce2de22-botpress-150x150.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "botpress.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 6,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/calc",
+            "title": "Cal",
+            "description": "Alternaitve to Calendly",
+            "categories": [
+                "Organization"
+            ],
+            "logo": "",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "cal.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 7,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/chatwoot",
+            "title": "Chatwoot",
+            "description": "An other chatbot",
+            "categories": [
+                "Chatbot"
+            ],
+            "logo": "https://avatars0.githubusercontent.com/u/23416667?s=200&v=4",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "chatwoot.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 8,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/ghost",
+            "title": "Ghost",
+            "description": "An other chatbot",
+            "categories": [
+                "Chatbot"
+            ],
+            "logo": "https://static.ghost.org/v3.0.0/images/ghost.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "ghost.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 9,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/grafana",
+            "title": "Grafana",
+            "description": "To manage and visualize data",
+            "categories": [
+                "Data"
+            ],
+            "logo": "https://wiki.lafabriquedesmobilites.fr/images/fabmob/7/7d/Grafana_logo_swirl.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "grafana.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 10,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/grav",
+            "title": "Grav",
+            "description": "Create your blog",
+            "categories": [
+                "CMS"
+            ],
+            "logo": "https://seeklogo.com/images/G/grav-logo-95599948FF-seeklogo.com.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "grav.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 11,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "no",
+            "pathLocalDirStack":"/root/OpenMVPBox/jitsi",
+            "title": "Jitsi",
+            "description": "Manage your video meeting",
+            "categories": [
+                "Video meeting"
+            ],
+            "logo": "https://www.callstats.io/hubfs/Callstats-August2018/Images/jitsi-logo-size-501x781.png?t=1541520228989",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "jitsi.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 12,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/keyocloak",
+            "title": "Keycloak",
+            "description": "Manage your backend authentification",
+            "categories": [
+                "Authentification"
+            ],
+            "logo": "https://design.jboss.org/keycloak/logo/images/keycloak_upsteam_tile_200x150.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "key.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 13,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/kuma",
+            "title": "Kuma",
+            "description": "Monitor your service",
+            "categories": [
+                "Monitor"
+            ],
+            "logo": "https://kuma-public-assets.s3.amazonaws.com/kuma-logo-v2.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "kuma.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 14,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "no",
+            "pathLocalDirStack":"/root/OpenMVPBox/lemverse",
+            "title": "Lemverse",
+            "description": "Create your metaverse for remote team",
+            "categories": [
+                "Metaverse, remote"
+            ],
+            "logo": "https://raw.githubusercontent.com/l3mpire/lemverse/master/app/public/lemverse.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "lemverse.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 15,
+            "type": 1,
+            "installScript": "./install.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/mattermost",
+            "title": "Mattermost",
+            "description": "Alternative to slack",
+            "categories": [
+                "Communication, remote"
+            ],
+            "logo": "https://d1qb2nb5cznatu.cloudfront.net/startups/i/895963-166b1feaf5876c780bd91cec6e9e9e3a-medium_jpg.jpg?buster=1446247607",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "mattermost.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 16,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/metabase",
+            "title": "Metabase",
+            "description": "Create dashboard data for your team",
+            "categories": [
+                "Data"
+            ],
+            "logo": "https://cdn.freebiesupply.com/logos/large/2x/metabase-logo-png-transparent.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "metabase.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 17,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "no",
+            "pathLocalDirStack":"/root/OpenMVPBox/parse",
+            "title": "Parse",
+            "description": "Create your backend and store data",
+            "categories": [
+                "backend"
+            ],
+            "logo": "https://cdn.freebiesupply.com/logos/thumbs/2x/parse-1-logo.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "metabase.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 18,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/supabase",
+            "title": "Supabase",
+            "description": "Create your backend and store data",
+            "categories": [
+                "backend"
+            ],
+            "logo": "https://ia803407.us.archive.org/25/items/github.com-supabase-supabase_-_2021-04-21_12-15-45/cover.jpg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "supabase.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 19,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "no",
+            "pathLocalDirStack":"/root/OpenMVPBox/strapi",
+            "title": "Strapi",
+            "description": "Create your backend and store data",
+            "categories": [
+                "backend"
+            ],
+            "logo": "https://avatars1.githubusercontent.com/u/19872173?s=400&amp;v=4",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "strapi.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 20,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/wikijs",
+            "title": "Wikijs",
+            "description": "Collaborate with your team and exchange ",
+            "categories": [
+                "Collaboration"
+            ],
+            "logo": "https://yunohost.org/user/images/wikijs_logo.svg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "wikijs.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 21,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/wordpress",
+            "title": "Wordpress",
+            "description": "Create your website ",
+            "categories": [
+                "Collaboration"
+            ],
+            "logo": "https://down.imgspng.com/download/0720/wordpress_PNG47.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "wordpress.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 22,
             "type": 2,
             "installScript": "git",
-            "enable": "yes",
+            "enable": "no",
             "pathLocalDirStack":"",
             "title": "git",
             "description": "git project",
             "categories": [
                 "Git repo"
             ],
-            "logo": "",
+            "logo": "https://cdn.freebiesupply.com/logos/large/2x/git-icon-logo-png-transparent.png",
             "video":[
                 {
                     "desc": "",
