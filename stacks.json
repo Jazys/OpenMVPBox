@@ -112,13 +112,14 @@
             },
             "env": [
                 {
-                    "name": "Email admin",
-                    "value": "test@test.fr"
-                },
-                {
                     "name": "domaine",
                     "value": "t48.nuage.omvpb.ovh"
-                }               
+                },
+                {
+                    "name": "Email admin",
+                    "value": "test@test.fr"
+                }
+                              
             ]
         },
         {
