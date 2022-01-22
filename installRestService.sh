@@ -26,7 +26,7 @@ fi
 testEnp3s0=$(ip a |grep enp3s0 | wc -l)
 
 if (( testEnp3s0 >= 1 )); then
-  localip=$(ip -4 addr show testEnp3s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+  localip=$(ip -4 addr show enp3s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 fi
 
 sed -i 's/yyy.yyy/api.'$domaineName'/g' traefik/conf/traefik_dynamic.toml
