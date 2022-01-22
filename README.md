@@ -28,7 +28,7 @@ Ater choose your stack and run the installXX.sh script.
 
 
 Use my referral DO link to help me to contribute more !
-<p align="center">[![DigitalOcean Referral Badge](https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg)](https://www.digitalocean.com/?refcode=aeea1af961a4&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)</p>
+[![DigitalOcean Referral Badge](https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg)](https://www.digitalocean.com/?refcode=aeea1af961a4&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
 
 **Easy to use !** 
 
