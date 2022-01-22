@@ -1,5 +1,7 @@
 # OpenMVPBox
 
+<p align="center"><img width="400" alt="Logo" src="https://i.ibb.co/NmX3hKN/front-Open-MVP.png"></p>
+
 It's an environment that delivers some **no/low code software** for creating MVP/POC. You can choose your favorite stack.
 OpenMVPBox can be hosted on **your local** server or on a **VPS**.
 OpenMVPBox is **serverless**, all stacks are running with docker system. 
@@ -13,9 +15,10 @@ These stacks are used for managing service in our VPS.
 
 For minimal installation (root user for moment)
 
-    cd /root && git clone https://github.com/Jazys/OpenMVPBox.git && cd OpenMVPBox  
-    chmod +x makeScriptExec.sh && ./automaticInstall.sh SubDomainOrDomain
+    wget https://raw.githubusercontent.com/Jazys/OpenMVPBox/main/omvp-setup.sh
+    chmod +x ./omvp-setup.sh && sudo ./omvp-setup.sh mySubOrDomaineName (configure your DNS)
 
+Read all console log to find creditentials and urls (https://front.mySubOrDomaineName for install stacks)
 Ater choose your stack and run the installXX.sh script
 
 **Easy to use !** 
