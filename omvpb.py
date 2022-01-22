@@ -159,7 +159,7 @@ def getAllSintalledStack():
             print(titleFromDir)
 
             for aStack in cpyallStacksJson["stacks"]:
-                if aStack["title"]==titleFromDir:
+                if aStack["title"].lower()==titleFromDir:
                     aStack["env"]=env
                     aStack["userId"]=dir[:dir.find('_')]
                     print(aStack)
@@ -194,7 +194,7 @@ def createStack():
         allCommandToRunToDeploy.append(aEnv["value"])
     
     #print (allCommandToRunToDeploy)
-    newDirNameStack=str(request.json["userid"])+"_"+str(tmpStack["title"])
+    newDirNameStack=str(request.json["userid"])+"_"+str(tmpStack["title"]).lower()
 
     #copy template
     shutil.copytree(tmpStack["pathLocalDirStack"], os.path.join(DIR_CURRENT_STACKS,newDirNameStack))    

@@ -12,7 +12,7 @@ else
       domaineAppsmith=$1
       echo 'domaine for appsmith is 'domaineAppsmith
 fi
-sed -i '/URL_APPSMITH/c\URL_APPSMITH='$domaineAppsmith'' docker.env
+sed -i '/URL_APPSMITH/c\URL_APPSMITH='$domaineAppsmith'' .env
 
 
 if [ -z "$2" ]
@@ -23,8 +23,8 @@ else
       echo 'Email admin is ' $emailAdmin
 fi
 
-sed -i '/APPSMITH_ADMIN_EMAILS/c\APPSMITH_ADMIN_EMAILS='$emailAdmin'' docker.env
+sed -i '/APPSMITH_ADMIN_EMAILS/c\APPSMITH_ADMIN_EMAILS='$emailAdmin'' .env
 
 echo "Email login  for "$domaineAppsmith " is "$emailAdmin " " >> /tmp/toSendInfoByMail
 
-docker-compose -f docker-compose-with-traefik.yml --env-file docker.env up -d
+docker-compose -f docker-compose-with-traefik.yml up -d

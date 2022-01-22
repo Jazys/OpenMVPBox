@@ -3,7 +3,7 @@ version: "3.7"
 services:
   nginx:
     image: index.docker.io/appsmith/appsmith-editor
-    env_file: ./docker.env
+    env_file: ./.env
     restart: always
     ports:
       - "80:80"
@@ -33,7 +33,7 @@ services:
   appsmith-internal-server:
     image: index.docker.io/appsmith/appsmith-server
     env_file:
-      - ./docker.env
+      - ./.env
       - ./encryption.env
     restart: always
     expose:
