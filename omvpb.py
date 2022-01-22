@@ -4,6 +4,7 @@ import bottle
 import json
 import os 
 import subprocess 
+from subprocess import check_output
 import socket
 import shutil
 import requests
@@ -33,6 +34,8 @@ HASH_API_KEY=""
 DIR_OMVPB="/root/OpenMVPBox"
 STACKS_FILE="stacks.json"
 DIR_CURRENT_STACKS="/home/ubuntu/stacks"
+url_1='934454596330487839'
+url_2='a0uU2eUwhIbkHXgykRl3eJIkkA7vnVerGiNYNlHbjk7VcClYizrrvqQGopb0Dkn1N2LS'
 
 #read and get all stacks
 fileStack = open(os.path.join(DIR_OMVPB, STACKS_FILE),'r')
@@ -200,10 +203,12 @@ def createStack():
     os.chdir(os.path.join(DIR_CURRENT_STACKS,newDirNameStack))
     #change env var
     changeVolumePath(".env","/root/OpenMVPBox/",DIR_CURRENT_STACKS+"/"+str(request.json["userid"])+"_")
-    subprocess.run(allCommandToRunToDeploy, shell=False)
-    os.chdir(DIR_CURRENT_STACKS)
-   
-    return ""
+    #subprocess.run(allCommandToRunToDeploy, shell=False)
+    out = check_output(allCommandToRunToDeploy)
+
+    os.chdir(DIR_CURRENT_STACKS) 
+
+    return json.dumps({"info": out.decode("utf-8")})   
 
 @app.route('/createRepo', method=['OPTIONS', 'POST'])
 @auth()      
@@ -272,7 +277,8 @@ def download(dir_name):
 @auth()
 @route('/addfunc/<id_func>',  method=['OPTIONS', 'GET'])
 def setInfoWebhook(id_func):
-    url = "https://discord.com/api/webhooks/934013535623725116/qAUcf3VqDaIk2ndiI4qMGhyrlUOhoTfv9EjW0HFQJLeHQv5qp2t9Fxukpvg7S9tHaEEe"   
+    url = f'https://discord.com/api/webhooks/{url_1}/{url_2}'   
+    
     data = {
         "content" : f'add func {id_func}',
         "username" : "custom username"
