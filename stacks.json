@@ -910,12 +910,120 @@
             "env": [              
                 {
                     "name": "domaine",
-                    "value": "matomo.nuage.omvpb.ovh"
+                    "value": "nt.nuage.omvpb.ovh"
+                }               
+            ]
+        },                
+        {
+            "id": 26,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/minio",
+            "title": "Minio",
+            "description": "Store file  ",
+            "categories": [
+                "Store"
+            ],
+            "logo": "https://dl.min.io/logo/Minio_logo_light/Minio_logo_light.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "minio.nuage.omvpb.ovh"
                 }               
             ]
         },
         {
-            "id": 26,
+            "id": 27,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "no",
+            "pathLocalDirStack":"/root/OpenMVPBox/codimd",
+            "title": "CodiMD",
+            "description": "Collaboration tool",
+            "categories": [
+                "Collaboration"
+            ],
+            "logo": "https://pbs.twimg.com/profile_images/1235142658814705664/WbgIReh7_400x400.jpg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "codimd.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 28,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/directus",
+            "title": "Directus",
+            "description": "Backend",
+            "categories": [
+                "Backend"
+            ],
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Directus_Color_Logo_Vector.svg/512px-Directus_Color_Logo_Vector.svg.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "directus.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 29,
             "type": 2,
             "installScript": "git",
             "enable": "no",

@@ -34,7 +34,7 @@ services:
 
   db:
     container_name: postgres
-    image: postgres
+    image: postgres_strapi
     restart: always
     volumes:
       - postgresdatastrapi:/data/postgres
