@@ -415,7 +415,7 @@
             "type": 1,
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
-            "pathLocalDirStack":"/root/OpenMVPBox/keyocloak",
+            "pathLocalDirStack":"/root/OpenMVPBox/keycloak",
             "title": "Keycloak",
             "description": "Manage your backend authentification",
             "categories": [
@@ -486,7 +486,7 @@
             "id": 14,
             "type": 1,
             "installScript": "./install-with-traefik.sh",
-            "enable": "no",
+            "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/lemverse",
             "title": "Lemverse",
             "description": "Create your metaverse for remote team",
