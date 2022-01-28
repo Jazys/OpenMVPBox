@@ -485,7 +485,7 @@
         {
             "id": 14,
             "type": 1,
-            "installScript": "./install-with-traefik.sh",
+            "installScript": "./install.sh",
             "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/lemverse",
             "title": "Lemverse",
