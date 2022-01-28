@@ -24,7 +24,7 @@ echo "Login/admin for "$domaine " are admin and "$password " for conf-"$domaine
 echo "Login/admin for "$domaine " are admin and "$password " " >> /tmp/toSendInfoByMail
 
 #echo $cred
-sed -i 's/$creditentials/'$cred'/g' docker-compose-with-traefik.yml
+sed -i '/$creditentials/'$cred'/g' docker-compose-with-traefik.yml
 
 sed -i '/NEXT_PUBLIC_APP_URL/c\NEXT_PUBLIC_APP_URL=https://'$domaine .env
 
