@@ -2,6 +2,8 @@
 
 mkdir -p data
 
+chown 472:0 data/ -R
+
 domaine=""
 
 if [ -z "$1" ]
