@@ -11,7 +11,7 @@ services:
       - penpot_assets_data:/opt/data
 
     env_file:
-      - config.env
+      - .env
 
     depends_on:
       - penpot-backend
@@ -43,7 +43,7 @@ services:
       - penpot-redis
 
     env_file:
-      - config.env
+      - .env
 
     networks:
       - traefik-proxy

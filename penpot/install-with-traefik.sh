@@ -14,12 +14,12 @@ else
       echo 'domaine for penpot is 'domainepenpot
 fi
 
-sed -i '/PENPOT_PUBLIC_URI/c\PENPOT_PUBLIC_URI='$domainepenpot config.env
-sed -i '/URL_PENPOT/c\URL_PENPOT='$domainepenpot config.env 
+sed -i '/PENPOT_PUBLIC_URI/c\PENPOT_PUBLIC_URI='$domainepenpot .env
+sed -i '/URL_PENPOT/c\URL_PENPOT='$domainepenpot .env 
 
 echo "Email login  for "$domainepenpot " is test@test.fr and password Azerty@1234" >> /tmp/toSendInfoByMail
 
-docker-compose -f docker-compose-with-traefik.yml --env-file config.env up -d
+docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d
 
 echo "wait 30 second for starting docker"
 sleep 30
