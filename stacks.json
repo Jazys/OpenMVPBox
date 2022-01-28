@@ -594,7 +594,7 @@
             "id": 17,
             "type": 1,
             "installScript": "./install-with-traefik.sh",
-            "enable": "no",
+            "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/parse",
             "title": "Parse",
             "description": "Create your backend and store data",
@@ -666,7 +666,7 @@
             "id": 19,
             "type": 1,
             "installScript": "./install-with-traefik.sh",
-            "enable": "no",
+            "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/strapi",
             "title": "Strapi",
             "description": "Create your backend and store data",
@@ -877,9 +877,45 @@
                     "value": "matomo.nuage.omvpb.ovh"
                 }               
             ]
-        },
+        },        
         {
             "id": 25,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/nextcloud",
+            "title": "Nextcloud",
+            "description": "Store file and collaborate with team ",
+            "categories": [
+                "Store and collaboration"
+            ],
+            "logo": "https://cdn.icon-icons.com/icons2/2699/PNG/512/nextcloud_logo_icon_168948.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "matomo.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 26,
             "type": 2,
             "installScript": "git",
             "enable": "no",

@@ -1,14 +1,20 @@
 #!/bin/bash
 
-[ `whoami` = root ] || exec sudo su -c $0
-
 mkdir -p postgres-data
 
-read -p "Indicate your domain for parse dashboard : " domaine
+domaine=""
+
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for parse dashboard: " domaine
+else
+      domaine=$1
+      echo 'domaine for parse dashboard is '$domaine
+fi
+
 sed -i '/URL_PARSE_DASH=/c\URL_PARSE_DASH='$domaine .env 
 
-read -p "Indicate your domain for parse server  : " domaine
-sed -i '/URL_PARSE_SRV=/c\URL_PARSE_SRV='$domaine .env 
+sed -i '/URL_PARSE_SRV=/c\URL_PARSE_SRV=back-'$domaine .env 
 
 sed -i 's/xxxx/'$domaine'/g' config.json
 

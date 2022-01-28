@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-"serveur":"https://xxxx/parse"
+"serveur":"https://back-xxxx/parse"
           "appId":"myAPP",
           "javascriptKey": "myJavascriptKey",
           "restKey": "myRestKey",
