@@ -254,6 +254,7 @@ def createStackRepo():
 @auth()
 @app.route('/delete/<dir_name>', method=['OPTIONS', 'DELETE'])
 def deleteStack(dir_name):
+    dir_name = dir_name.lower()
     #stoppe docker
     os.chdir(os.path.join(DIR_CURRENT_STACKS,dir_name))
     subprocess.run(["docker-compose","-f","docker-compose-with-traefik.yml", "down"], shell=False)
