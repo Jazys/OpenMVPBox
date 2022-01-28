@@ -1,13 +1,23 @@
 #!/bin/bash
 
-[ `whoami` = root ] || exec sudo su -c $0
-
 mkdir postgres-data
 mkdir data
 
-read -p "Indicate your domain for penpot: " domainepenpot
+domainepenpot=""
+emailAdmin=""
+
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for penpot: " domainepenpot
+else
+      domainepenpot=$1
+      echo 'domaine for penpot is 'domainepenpot
+fi
+
 sed -i '/PENPOT_PUBLIC_URI/c\PENPOT_PUBLIC_URI='$domainepenpot config.env
 sed -i '/URL_PENPOT/c\URL_PENPOT='$domainepenpot config.env 
+
+echo "Email login  for "$domainepenpot " is test@test.fr and password Azerty@1234" >> /tmp/toSendInfoByMail
 
 docker-compose -f docker-compose-with-traefik.yml --env-file config.env up -d
 

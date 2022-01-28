@@ -24,7 +24,7 @@ services:
       - traefik.http.services.supabase-front-srv.loadbalancer.server.port=3000
       - traefik.docker.network=${NETWORK_TRAEFIK}
     environment:
-      SUPABASE_URL: http://kong:8000
+      SUPABASE_URL: ${URL_SUPABASE_BACK}
       STUDIO_PG_META_URL: http://meta:8080
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
     networks:

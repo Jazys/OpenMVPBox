@@ -702,7 +702,7 @@
             "id": 20,
             "type": 1,
             "installScript": "./install-with-traefik.sh",
-            "enable": "yes",
+            "enable": "no",
             "pathLocalDirStack":"/root/OpenMVPBox/wikijs",
             "title": "Wikijs",
             "description": "Collaborate with your team and exchange ",
@@ -772,6 +772,114 @@
         },
         {
             "id": 22,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/penpot",
+            "title": "Penpot",
+            "description": "Alternative to Figma ",
+            "categories": [
+                "UI design"
+            ],
+            "logo": "https://camo.githubusercontent.com/cbace2b72bce4783854f8807a64f3e791c56c6d9e797961c2e73d55e26a405d7/68747470733a2f2f70656e706f742e6170702f696d616765732f726561646d652f726561646d652d6c6f676f2e6a7067",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "traccar.nuage.omvpb.ovh"
+                }               
+            ]
+        },        
+        {
+            "id": 23,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/traccar",
+            "title": "Traccar",
+            "description": "Localize your vehicle ",
+            "categories": [
+                "Localize"
+            ],
+            "logo": "https://is3-ssl.mzstatic.com/image/thumb/Purple128/v4/c6/ef/a5/c6efa5f6-b857-7541-a312-adb41833c219/source/60x60bb.jpg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "traccar.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 24,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/matomo",
+            "title": "Matomo",
+            "description": "Alternative to Google Analytics ",
+            "categories": [
+                "Analytics"
+            ],
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Matomo_Logo.svg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [              
+                {
+                    "name": "domaine",
+                    "value": "traccar.nuage.omvpb.ovh"
+                }               
+            ]
+        },
+        {
+            "id": 25,
             "type": 2,
             "installScript": "git",
             "enable": "no",
