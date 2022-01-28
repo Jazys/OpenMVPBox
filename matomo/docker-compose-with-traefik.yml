@@ -16,6 +16,7 @@ services:
 
   app:
     image: matomo:fpm-alpine
+    container_name: matomo_docker_app
     restart: always
     links:
       - db
