@@ -199,7 +199,7 @@
             "type": 1,
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
-            "pathLocalDirStack":"/root/OpenMVPBox/calc",
+            "pathLocalDirStack":"/root/OpenMVPBox/cal",
             "title": "Cal",
             "description": "Alternaitve to Calendly",
             "categories": [
