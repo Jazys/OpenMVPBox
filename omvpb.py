@@ -149,7 +149,7 @@ def getAllSintalledStack():
 
                     for aLine in alline:
                         aLine=aLine.strip()
-                        if aLine!="":
+                        if aLine!="" and aLine[0]!="#":
                             splitLine=aLine.split("=")
                             env.append({ "name":splitLine[0], "value":splitLine[1]})
                     print(env)
