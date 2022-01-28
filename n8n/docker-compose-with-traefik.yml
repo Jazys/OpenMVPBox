@@ -45,6 +45,11 @@ services:
       - traefik.http.routers.n8n.tls=true
       - traefik.http.routers.n8n.tls.certresolver=lets-encrypt
       - traefik.http.services.n8n.loadbalancer.server.port=${PORT_N8N}
+      - traefik.http.middlewares.testheader.headers.accessControlAllowMethods="GET, OPTIONS, PUT, POST, DELETE"
+      - traefik.http.middlewares.testheader.headers.accessControlAllowOriginList="*"    
+      - traefik.http.middlewares.testheader.headers.addVaryHeader=true
+      - traefik.http.middlewares.testheader.headers.accessControlAllowOrigin="*"
+      - traefik.http.middlewares.testheader.headers.accessControlAllowHeaders="Origin, Accept,Content-Type, X-Requested-With, X-CSRF-Token"  
     networks:
       - traefik-proxy
     links:
