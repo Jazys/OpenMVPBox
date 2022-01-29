@@ -44,15 +44,15 @@ services:
             {
                 "public": {
                     "lp": {
-                        "website": "https://app.lemverse.com",
+                        "website": "${WEBSITE:-https://app.lemverse.com}",
                         "product": "lemverse",
                         "process": "main",
-                        "gods": [""],
-                        "production": false,
+                        "gods": ["${GOD_LEMVERSE:-}"],
+                        "production": ${PRODUCTION_MODE:-false},
                         "staging": false,
                         "enableLogClient": false
                     },
-                    "debug": false,
+                    "debug": ${PRODUCTION_MODE:-false},
                     "defaultReaction": "❤️",
                     "zoom": 1,
                     "peer": {
