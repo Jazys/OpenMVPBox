@@ -33,8 +33,8 @@ services:
 #    command: 'strapi start'
 
   db:
-    container_name: postgres
-    image: postgres_strapi
+    container_name: postgres_strapi
+    image: postgres
     restart: always
     volumes:
       - postgresdatastrapi:/data/postgres

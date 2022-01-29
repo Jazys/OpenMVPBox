@@ -2,6 +2,7 @@ version: "3.7"
 services:
   parse-server:
     image: parseplatform/parse-server
+    restart: always
     environment:
       - PARSE_SERVER_APPLICATION_ID=myAPP
       - PARSE_SERVER_MASTER_KEY=myKEY

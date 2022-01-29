@@ -35,6 +35,7 @@ services:
 
   penpot-backend:
     image: "penpotapp/backend:latest"
+    container_name: penpot-backend
     volumes:
       - penpot_assets_data:/opt/data
 

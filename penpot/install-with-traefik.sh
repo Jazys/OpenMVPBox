@@ -24,5 +24,5 @@ docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d
 echo "wait 30 second for starting docker"
 sleep 30
 
-docker exec -ti penpot_penpot-backend_1 ./manage.sh create-profile -u test@test.fr -p Azerty@1234 -n test
+docker exec -ti penpot-backend ./manage.sh create-profile -u test@test.fr -p Azerty@1234 -n test
 

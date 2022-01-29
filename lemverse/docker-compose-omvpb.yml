@@ -1,0 +1,233 @@
+version: "3.8"
+services:
+    mongodb:
+        image: mongo:5.0.3
+        container_name: mongodb
+        environment:
+            - PUID=1000
+            - PGID=1000
+        networks:
+            - traefik-proxy
+        volumes:
+            - mongolem:/data/db
+        restart: unless-stopped
+
+    lemverse:
+        image: lempire/lemverse:latest
+        container_name: lemverse
+        restart: unless-stopped
+        networks:
+            - traefik-proxy
+        depends_on:
+            - mongodb
+            - peer
+        logging:
+          options:
+            max-size: '12m'
+            max-file: '5'
+          driver: json-file
+        volumes:
+            - lemverse:/var/tmp/lemverse
+#            - ./lemverse.json:/usr/local/etc/lemverse.json
+        labels:
+          - traefik.enable=true
+          - traefik.http.routers.lemverse.rule=Host(`${URL_LEMVERSE}`)
+          - traefik.http.routers.lemverse.entrypoints=websecure
+          - traefik.http.routers.lemverse.tls=true
+          - traefik.http.routers.lemverse.tls.certresolver=lets-encrypt
+          - traefik.http.services.lemverse.loadbalancer.server.port=3000
+        environment:
+            ROOT_URL: ${APP_ROOT_URL:-http://localhost}
+            MONGO_URL: mongodb://mongodb:27017/meteor
+            PORT: 3000
+            METEOR_SETTINGS: | # App settings
+            {
+                "public": {
+                    "lp": {
+                        "website": "https://app.lemverse.com",
+                        "product": "lemverse",
+                        "process": "main",
+                        "gods": [""],
+                        "production": false,
+                        "staging": false,
+                        "enableLogClient": false
+                    },
+                    "debug": false,
+                    "defaultReaction": "❤️",
+                    "zoom": 1,
+                    "peer": {
+                        "answerMaxAttempt": 5,
+                        "answerDelayBetweenAttempt": 750,
+                        "avatarAPI": "https://robohash.org/[user_id]?set=set4&bgset=bg2&size=320x240",
+                        "callDelay": 250,
+                        "delayBeforeClosingCall": 1000
+                    },
+                    "meet": {
+                        "serverURL": "${URL_JITSI:-'meet.jit.si'}",
+                        "roomDefaultName": "myVerse"
+                    },
+                    "character": {
+                        "walkSpeed": 180,
+                        "runSpeed": 720,
+                        "sensorNearDistance": 75,
+                        "sensorFarDistance": 85
+                    },
+                    "assets": {
+                        "character": {
+                            "frameWidth": 16,
+                            "frameHeight": 32,
+                            "formats": {
+                                "w-384": {
+                                    "animations": {
+                                        "run": {
+                                            "up": {
+                                                "frames": [54, 55, 56, 57, 58, 59],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "down": {
+                                                "frames": [66, 67, 68, 69, 70, 71],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "left": {
+                                                "frames": [60, 61, 62, 63, 64, 65],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "right": {
+                                                "frames": [48, 49, 50, 51, 52, 53],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            }
+                                        }
+                                    }
+                                },
+                                "w-927": {
+                                    "animations": {
+                                        "run": {
+                                            "up": {
+                                                "frames": [120, 121, 122, 123, 124, 125],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "down": {
+                                                "frames": [132, 133, 134, 135, 136, 137],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "left": {
+                                                "frames": [126, 127, 128, 129, 130, 131],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "right": {
+                                                "frames": [114, 115, 116, 117, 118, 119],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            }
+                                        }
+                                    }
+                                },
+                                "w-896": {
+                                    "animations": {
+                                        "run": {
+                                            "up": {
+                                                "frames": [118, 119, 120, 121, 122, 123],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "down": {
+                                                "frames": [130, 131, 132, 133, 134, 135],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "left": {
+                                                "frames": [124, 125, 126, 127, 128, 129],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            },
+                                            "right": {
+                                                "frames": [112, 113, 114, 115, 116, 117],
+                                                "frameRate": 10,
+                                                "repeat": -1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "skins": {
+                        "guest": {},
+                        "default": {}
+                    },
+                    "templateLevelId": "lvl_iLOVEaLOTlemverse",
+                    "tos": {
+                        "terms": "",
+                        "cookies": "",
+                        "privacy": ""
+                    }
+                },
+                "defaultLevelId": "lvl_iLOVEaLOTlemverse",
+                "email": {
+                    "from": "The lembot <contact@batisseurdunumerique.fr>"
+                },
+                "peer": {
+                    "path": "/peer",
+                    "client": {
+                        "url": "${URL_PEERJS}",
+                        "port": 443,
+                        "credentialDuration": 86400,
+                        "secret": "",
+                        "config": { 
+                            "iceServers": [{ 
+                            "urls": "stun:stun.l.google.com:19302"
+                            }],
+                            "iceTransportPolicy" : "all",
+                            "sdpSemantics": "unified-plan"
+                        }
+                    },
+                    "server": {
+                        "start": false,
+                        "port": 443,
+                        "key": "peerjs",
+                        "alive_timeout": 60000,
+                        "expire_timeout": 5000,
+                        "allow_discovery": false
+                    }
+                }
+            }
+    peer:
+        image: peerjs/peerjs-server:0.6.1
+        container_name: peer
+        restart: unless-stopped
+        labels:
+          - traefik.enable=true
+          - traefik.http.routers.peerjs.rule=Host(`${URL_PEERJS}`)
+          - traefik.http.routers.peerjs.entrypoints=websecure
+          - traefik.http.routers.peerjs.tls=true
+          - traefik.http.routers.peerjs.tls.certresolver=lets-encrypt
+          - traefik.http.services.peerjs.loadbalancer.server.port=9000
+        networks:
+            - traefik-proxy
+        command: [ "--port", "9000", "--path", "/peer" ]
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  mongolem:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MONGO_LEMVERSE}
+      o: bind
+  lemverse:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_DATA_LEMVERSE}
+      o: bind

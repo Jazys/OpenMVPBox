@@ -990,7 +990,7 @@
             "id": 28,
             "type": 1,
             "installScript": "./install-with-traefik.sh",
-            "enable": "yes",
+            "enable": "no",
             "pathLocalDirStack":"/root/OpenMVPBox/directus",
             "title": "Directus",
             "description": "Backend",

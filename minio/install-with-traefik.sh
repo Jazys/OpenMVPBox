@@ -1,9 +1,17 @@
 #!/bin/bash
 
-[ `whoami` = root ] || exec sudo su -c $0
-
 mkdir data
-read -p "Indicate your domain for minio: " domaine
+
+domaine=""
+
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for Minio: " domaine
+else
+      domaine=$1
+      echo 'domaine for Minio is 'domaine
+fi
+
 sed -i '/URL_MINIO/c\URL_MINIO='$domaine .env
 
 docker-compose -f docker-compose-with-traefik.yml up -d
