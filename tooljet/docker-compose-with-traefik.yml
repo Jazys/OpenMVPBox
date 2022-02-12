@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:11
+    container_name : postgres_tooljet
+    restart: always
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASS}
+      - POSTGRES_DB=${PG_DB}
+      - POSTGRES_HOST=${PG_HOST}
+      - PGDATA=/data/postgres
+    networks:
+      - traefik-proxy
+    volumes:
+      - postgresdata:/data/postgres
+
+  client:
+    tty: true
+    stdin_open: true
+    image: tooljet/tooljet-client-ce:latest
+    restart: always
+    depends_on:
+      - server
+    networks:
+      - traefik-proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tooljet.rule=Host(`${URL_TOOLJET}`)
+      - traefik.http.routers.tooljet.entrypoints=websecure
+      - traefik.http.routers.tooljet.tls=true
+      - traefik.http.routers.tooljet.tls.certresolver=lets-encrypt
+      - traefik.http.routers.tooljet.service=tooljet
+      - traefik.http.services.tooljet.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    command: openresty -g "daemon off;"
+
+  server:
+    image: tooljet/tooljet-server-ce:latest
+    tty: true
+    stdin_open: true
+    restart: always
+    networks:
+      - traefik-proxy
+    env_file: .env
+    environment:
+      SERVE_CLIENT: "false"
+    command: npm run start:prod
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  postgresdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES}
+      o: bind
+

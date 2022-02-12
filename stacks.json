@@ -1024,6 +1024,42 @@
         },
         {
             "id": 29,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/tooljet",
+            "title": "tooljet",
+            "description": "create internal dashboard",
+            "categories": [
+                "Dashboard"
+            ],
+            "logo": "https://user-images.githubusercontent.com/7828962/143565889-f4c51c89-fc7e-471c-90b6-42ae697bca6b.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "test.mydomaine"
+                }
+            ]
+        },
+        {
+            "id": 30,
             "type": 2,
             "installScript": "git",
             "enable": "no",
