@@ -1096,6 +1096,42 @@
         },
         {
             "id": 31,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/baserow",
+            "title": "budibase",
+            "description": "Alternative to airtable",
+            "categories": [
+                "Database"
+            ],
+            "logo": "https://pbs.twimg.com/profile_images/1265345486606807041/TMAcioHa_400x400.jpg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "budibase.mydomaine.fr"
+                }
+            ]
+        },
+        {
+            "id": 32,
             "type": 2,
             "installScript": "git",
             "enable": "no",

@@ -1,0 +1,224 @@
+version: "3"
+
+services:
+  db:
+    # Please ensure the postgres-client's major version in the backend image is kept in
+    # sync with this major version so pg_dump remains compatible.
+    image: postgres:11.3
+    container_name: postgres_baserow
+    environment:
+      - POSTGRES_USER=${DATABASE_USER:-baserow}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-baserow}
+      - POSTGRES_DB=${DATABASE_NAME:-baserow}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - PGDATA=/data/postgres
+    networks:
+      - baserow-network
+    volumes:
+      - pgdata:/data/postgres
+
+  redis:
+    image: redis:6.0
+    networks:
+      - baserow-network
+
+  mjml:
+    image: liminspace/mjml-tcpserver:0.10
+    # mjml is based off the node image which creates a non root node user we can run as
+    user: "1000:1000"
+    networks:
+      - baserow-network
+
+  backend:
+    build:
+      dockerfile: ./baserow/backend/Dockerfile
+      context: .
+    image: baserow_backend:latest
+    restart: always
+    environment:
+      - PUBLIC_BACKEND_URL=https://${PUBLIC_BACKEND_URL}
+      - PUBLIC_WEB_FRONTEND_URL=https://${PUBLIC_WEB_FRONTEND_URL}
+      - MIGRATE_ON_STARTUP=${MIGRATE_ON_STARTUP:-true}
+      - SYNC_TEMPLATES_ON_STARTUP=${SYNC_TEMPLATES_ON_STARTUP:-true}
+      - DATABASE_USER=${DATABASE_USER:-baserow}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-baserow}
+      - DATABASE_NAME=${DATABASE_NAME:-baserow}
+      - DATABASE_HOST=${POSTGRES_HOST}
+      - ADDITIONAL_APPS
+      - MEDIA_URL=https://${PUBLIC_MEDIA_URL}/media/
+      - EMAIL_SMTP
+      - EMAIL_SMTP_HOST
+      - EMAIL_SMTP_PORT
+      - EMAIL_SMTP_USE_TLS
+      - EMAIL_SMTP_USER
+      - EMAIL_SMTP_PASSWORD
+      - FROM_EMAIL
+      - DISABLE_ANONYMOUS_PUBLIC_VIEW_WS_CONNECTIONS
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.baserow-back.rule=Host(`${PUBLIC_BACKEND_URL}`)
+      - traefik.http.routers.baserow-back.entrypoints=websecure
+      - traefik.http.routers.baserow-back.tls=true
+      - traefik.http.routers.baserow-back.tls.certresolver=lets-encrypt
+      - traefik.http.routers.baserow-back.service=baserow-back
+      - traefik.http.services.baserow-back.loadbalancer.server.port=8000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    depends_on:
+      - db
+      - redis
+      - mjml
+      - media-volume-fixer
+    volumes:
+      - media:/baserow/media
+    networks:
+      - baserow-network
+      - traefik-proxy
+
+  celery:
+    image: baserow_backend:latest
+    environment:
+      - ADDITIONAL_APPS
+      - EMAIL_SMTP
+      - EMAIL_SMTP_HOST
+      - EMAIL_SMTP_PORT
+      - EMAIL_SMTP_USE_TLS
+      - EMAIL_SMTP_USER
+      - EMAIL_SMTP_PASSWORD
+      - FROM_EMAIL
+      - DISABLE_ANONYMOUS_PUBLIC_VIEW_WS_CONNECTIONS
+    build:
+      dockerfile: ./backend/Dockerfile
+      context: .
+    command: celery worker -l INFO -Q celery
+    depends_on:
+      - backend
+    volumes:
+      - media:/baserow/media
+    networks:
+      - baserow-network
+
+  celery-export-worker:
+    image: baserow_backend:latest
+    build:
+      dockerfile: ./baserow/backend/Dockerfile
+      context: .
+    command: celery worker -l INFO -Q export
+    depends_on:
+      - backend
+    environment:
+      - ADDITIONAL_APPS
+      - EMAIL_SMTP
+      - EMAIL_SMTP_HOST
+      - EMAIL_SMTP_PORT
+      - EMAIL_SMPT_USE_TLS
+      - EMAIL_SMTP_USER
+      - EMAIL_SMTP_PASSWORD
+      - FROM_EMAIL
+      - DISABLE_ANONYMOUS_PUBLIC_VIEW_WS_CONNECTIONS
+    volumes:
+      - media:/baserow/media
+    networks:
+      - baserow-network
+   
+
+  celery-beat-worker:
+    image: baserow_backend:latest
+    build:
+      dockerfile: ./baserow/backend/Dockerfile
+      context: .
+    command: celery beat -l INFO -S redbeat.RedBeatScheduler
+    depends_on:
+      - backend
+    environment:
+      - ADDITIONAL_APPS
+      - EMAIL_SMTP
+      - EMAIL_SMTP_HOST
+      - EMAIL_SMTP_PORT
+      - EMAIL_SMTP_USE_TLS
+      - EMAIL_SMTP_USER
+      - EMAIL_SMTP_PASSWORD
+      - FROM_EMAIL
+      - DISABLE_ANONYMOUS_PUBLIC_VIEW_WS_CONNECTIONS
+    volumes:
+      - media:/baserow/media
+    networks:
+      - baserow-network
+
+  web-frontend:
+    build:
+      context: .
+      dockerfile: ./baserow/web-frontend/Dockerfile
+    image: baserow_web-frontend:latest
+    restart: always
+    environment:
+      - PUBLIC_BACKEND_URL=https://${PUBLIC_BACKEND_URL}
+      - PUBLIC_WEB_FRONTEND_URL=https://${PUBLIC_WEB_FRONTEND_URL}
+      - ADDITIONAL_MODULES
+      - DISABLE_ANONYMOUS_PUBLIC_VIEW_WS_CONNECTIONS
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.baserow-front.rule=Host(`${PUBLIC_WEB_FRONTEND_URL}`)
+      - traefik.http.routers.baserow-front.entrypoints=websecure
+      - traefik.http.routers.baserow-front.tls=true
+      - traefik.http.routers.baserow-front.tls.certresolver=lets-encrypt
+      - traefik.http.routers.baserow-front.service=baserow-front
+      - traefik.http.services.baserow-front.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    depends_on:
+      - backend
+    networks:
+      - baserow-network
+      - traefik-proxy
+
+  # A nginx container purely to serve up django's MEDIA files.
+  media:
+    build: media
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.baserow-media.rule=Host(`${PUBLIC_MEDIA_URL}`)
+      - traefik.http.routers.baserow-media.entrypoints=websecure
+      - traefik.http.routers.baserow-media.tls=true
+      - traefik.http.routers.baserow-media.tls.certresolver=lets-encrypt
+      - traefik.http.routers.baserow-media.service=baserow-media
+      - traefik.http.services.baserow-media.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    depends_on:
+      - media-volume-fixer
+    volumes:
+      - media:/baserow/media
+    networks:
+      - baserow-network
+      - traefik-proxy
+
+  # When switching between dev and local the media files in the media volume will be
+  # owned by different users. Ensure that we chown them to the user appropriate for the
+  # environment here.
+  media-volume-fixer:
+    image: bash:4.4
+    command: chown 9999:9999 -R /baserow/media
+    volumes:
+      - media:/baserow/media
+    networks:
+      - baserow-network
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+  baserow-network:
+    internal: true
+
+volumes:
+  pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PG_BASEROW}
+      o: bind
+
+  media:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_MEDIA_BASEROW}
+      o: bind
