@@ -1060,6 +1060,42 @@
         },
         {
             "id": 30,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/budibase",
+            "title": "budibase",
+            "description": "create internal dashboard",
+            "categories": [
+                "Dashboard"
+            ],
+            "logo": "https://d33wubrfki0l68.cloudfront.net/a412b3c6d9ed…2d4d07fd263195b5a76e654b8/ac6fa/budibase-logo.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "budibase.mydomaine.fr"
+                }
+            ]
+        },
+        {
+            "id": 31,
             "type": 2,
             "installScript": "git",
             "enable": "no",
