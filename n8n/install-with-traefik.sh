@@ -24,7 +24,7 @@ else
       sed -i '/N8N_BASIC_AUTH_PASSWORD/c\N8N_BASIC_AUTH_PASSWORD='$3 .env
 fi
 
-echo "Login/admin for "$domaineN8n " are " $2 " and "$3 " or test/test if empty " >> /tmp/toSendInfoByMail
+echo "Login/admin for https://"$domaineN8n " are " $2 " and "$3 " or test/test if empty " >> /tmp/toSendInfoByMail
 
 
 docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d

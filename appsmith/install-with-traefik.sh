@@ -25,6 +25,6 @@ fi
 
 sed -i '/APPSMITH_ADMIN_EMAILS/c\APPSMITH_ADMIN_EMAILS='$emailAdmin'' .env
 
-echo "Email login  for "$domaineAppsmith " is "$emailAdmin " " >> /tmp/toSendInfoByMail
+echo "Email login  for https://"$domaineAppsmith " is "$emailAdmin " " >> /tmp/toSendInfoByMail
 
 docker-compose -f docker-compose-with-traefik.yml up -d
