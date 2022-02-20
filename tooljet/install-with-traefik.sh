@@ -26,3 +26,5 @@ docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d
 sleep 60
 
 docker-compose -f docker-compose-with-traefik.yml run server npm run db:seed
+
+echo "For tooljet stack url is https://"$domaine >> /tmp/toSendInfoByMail
