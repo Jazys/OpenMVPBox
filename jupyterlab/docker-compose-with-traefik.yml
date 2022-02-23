@@ -1,0 +1,35 @@
+version: "3.3"
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jupyter.rule=Host(`${URL_JUPYTER}`)
+      - traefik.http.routers.jupyter.entrypoints=websecure
+      - traefik.http.routers.jupyter.tls=true
+      - traefik.http.routers.jupyter.tls.certresolver=lets-encrypt 
+      - traefik.http.services.jupyterv-srv.loadbalancer.server.port=8888
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+      JUPYTER_TOKEN: "docker"
+    volumes:
+      - jupyter-data:/home/jovyan/work
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+  
+volumes:
+  jupyter-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_JUPYTER}
+      o: bind
