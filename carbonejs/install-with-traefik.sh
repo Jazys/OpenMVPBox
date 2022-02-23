@@ -1,15 +1,19 @@
 #!/bin/bash
 
-[ `whoami` = root ] || exec sudo su -c $0
+touch database.db
+domaine=""
 
-mkdir -p dataClientSftp
-mkdir -p configSftp
-cp configSftp.json configSftp/sftp.json
+if [ -z "$1" ]
+then
+      read -p "Indicate your domain for CarboneJs: " domaine
+else
+      domaine=$1
+      echo 'domaine for CarboneJs is '$domaine
+fi
 
-read -p "Indicate your domain for serving file: " domaine
 sed -i '/URL_CARBONE=/c\URL_CARBONE='$domaine .env 
 
-read -p "Indicate your domain for sftp client : " domaine
-sed -i '/URL_CLI_SFTP=/c\URL_CLI_SFTP='$domaine .env 
+echo "Login/admin for browsing file is https://file."$domaine " are admin and admin " >> /tmp/toSendInfoByMail
+echo "You can use POST Request in JSON to https://"$domaine ". See README for example" >> /tmp/toSendInfoByMail
 
 docker-compose -f docker-compose-with-traefik.yml up -d

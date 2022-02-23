@@ -1,3 +1,5 @@
+
+
 # using
 Call this kind of url : @adresse/render by POST Method
 
@@ -18,4 +20,4 @@ Need to use the following JSON :
 
 Create template following instructions https://carbone.io/documentation.html#building-a-template
 
-You can put template when using sftp client
+You can put template with file browse

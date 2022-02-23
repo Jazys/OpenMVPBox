@@ -22,61 +22,31 @@ services:
       - traefik-proxy
     volumes:
       - templatefiles:/app/templates
-
-    
-  client_sftp:
-    image: machines/filestash
-    restart: always
-    environment:
-    - APPLICATION_URL=
+  
+  filebrowser:
+    image: filebrowser/filebrowser:latest
     volumes:
-      - sftp_cli:/app/data/state
-    logging:
-      options:
-        max-size: '12m'
-        max-file: '5'
-      driver: json-file
+      - templatefiles:/srv  
+      - ./database.db:/database.db
     labels:
       - traefik.enable=true
-      - traefik.http.routers.carbone-cli-sftp.rule=Host(`${URL_CLI_SFTP}`)
-      - traefik.http.routers.carbone-cli-sftp.entrypoints=websecure
-      - traefik.http.routers.carbone-cli-sftp.tls=true
-      - traefik.http.routers.carbone-cli-sftp.tls.certresolver=lets-encrypt
-      - traefik.http.services.carbone-cli-sftp.loadbalancer.server.port=8334
-    networks:
-      - traefik-proxy
-  
-  sftp:
-    image: "emberstack/sftp"
-    volumes:
-      - templatefiles:/home/user/sftp
-      - ${VOLUME_SRV_FTP_CFG}:/app/config/sftp.json:ro
-    logging:
-      options:
-        max-size: '12m'
-        max-file: '5'
-      driver: json-file
-    labels:
-      - traefik.enable=true      
-      - traefik.tcp.routers.carbone-srv-sftp.rule=HostSNI(`*`)
-      - traefik.tcp.routers.carbone-srv-sftp.entrypoints=sftp
-      - traefik.tcp.routers.carbone-srv-sftp.service=carbone-srv-sftp-svc
-      - traefik.tcp.services.carbone-srv-sftp-svc.loadbalancer.server.port=22
+      - traefik.http.routers.filebrowser-carbo.rule=Host(`file.${URL_CARBONE}`)
+      - traefik.http.routers.filebrowser-carbo.entrypoints=websecure
+      - traefik.http.routers.filebrowser-carbo.tls=true
+      - traefik.http.routers.filebrowser-carbo.tls.certresolver=lets-encrypt
+      - traefik.http.services.filebrowser-carbo.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    restart: unless-stopped
     networks:
       - traefik-proxy
 
+ 
 networks:
   traefik-proxy:
     external:
       name: ${NETWORK_TRAEFIK}
-volumes:
-  sftp_cli:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${VOLUME_CLI_SFTP}
-      o: bind
-      
+
+volumes:      
   templatefiles:
     driver: local
     driver_opts:
