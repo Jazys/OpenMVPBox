@@ -1,0 +1,30 @@
+# e2e/docker-compose.yml from repo
+# https://github.com/bahmutov/cypress-open-from-docker-compose
+version: '3.8'
+
+services:
+  apkbuilder:
+    image: alvrme/alpine-android-base:latest-jdk11
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    working_dir: /data
+    command : './gradlew task :app:assembleRelease'
+    volumes:
+      - ./MyApp:/data
+      - ./gradle-cache:/cache
+
+#  apkSigner:
+#    image: agileek/ionic-framework:2.0.0
+#    working_dir: /data
+#    command : './gradlew task :app:assembleRelease'
+#    volumes:
+#        - ./MyApp/MyApplication2:/data
+#        - ./gradle-cache:/cache
+
+#https://jpnarowski.com/how-to-publish-an-ionic-android-app-with-docker
+#jarsigner -keystore YOUR_KEYSTORE_PATH -storepass YOUR_KEYSTORE_PASS app-release-unsigned.apk YOUR_KEYSTORE_ALIAS &&
+#zipalign 4 app-release-unsigned.apk app-release.apk
+#
