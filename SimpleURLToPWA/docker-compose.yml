@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  nginx-web:
+    image : nginx
+    restart: always
+    volumes:
+      - ./data:/var/www/html
+      - ./conf:/etc/nginx/conf.d/
+    networks:
+      - hosting_web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nginx-web.rule=Host(`pwa.nuage.omvpb.ovh`) 
+      - traefik.http.routers.nginx-web.entrypoints=websecure
+      - traefik.http.routers.nginx-web.tls=true
+      - traefik.http.routers.nginx-web.tls.certresolver=lets-encrypt
+      - traefik.http.services.nginx-web.loadbalancer.server.port=80
+
+networks:
+  hosting_web:
+    external:
+      name: traefik-proxy
