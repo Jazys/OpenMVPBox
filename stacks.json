@@ -1132,6 +1132,86 @@
         },
         {
             "id": 32,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/SimpleURLToPWA",
+            "title": "Transform site to PWA",
+            "description": "Transform site to PWA",
+            "categories": [
+                "PWA"
+            ],
+            "logo": "",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "pwa.mydomaine.fr"
+                },
+                {
+                    "name": "url to embedded",
+                    "value": "google.fr"
+                }
+            ]
+        },
+        {
+            "id": 33,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/ApkBuilder",
+            "title": "Create a Apk from Website",
+            "description": "Create a Apk from Website",
+            "categories": [
+                "APK"
+            ],
+            "logo": "",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "apk.mydomaine.fr"
+                },
+                {
+                    "name": "url to embedded",
+                    "value": "google.fr"
+                }
+            ]
+        },
+        {
+            "id": 34,
             "type": 2,
             "installScript": "git",
             "enable": "no",

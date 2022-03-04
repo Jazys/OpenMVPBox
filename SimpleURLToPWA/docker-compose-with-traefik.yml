@@ -7,16 +7,17 @@ services:
       - ./data:/var/www/html
       - ./conf:/etc/nginx/conf.d/
     networks:
-      - hosting_web
+      - traefik-proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.nginx-web.rule=Host(`pwa.nuage.omvpb.ovh`) 
+      - traefik.http.routers.nginx-web.rule=Host(`${URL_PWA}`) 
       - traefik.http.routers.nginx-web.entrypoints=websecure
       - traefik.http.routers.nginx-web.tls=true
       - traefik.http.routers.nginx-web.tls.certresolver=lets-encrypt
       - traefik.http.services.nginx-web.loadbalancer.server.port=80
 
 networks:
-  hosting_web:
+  traefik-proxy:
     external:
-      name: traefik-proxy
+      name: ${NETWORK_TRAEFIK}
+      
