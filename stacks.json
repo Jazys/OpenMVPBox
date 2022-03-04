@@ -1136,7 +1136,7 @@
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/SimpleURLToPWA",
-            "title": "Transform site to PWA",
+            "title": "SimpleURLToPWA",
             "description": "Transform site to PWA",
             "categories": [
                 "PWA"
@@ -1176,7 +1176,7 @@
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/ApkBuilder",
-            "title": "Create a Apk from Website",
+            "title": "ApkBuilder",
             "description": "Create a Apk from Website",
             "categories": [
                 "APK"

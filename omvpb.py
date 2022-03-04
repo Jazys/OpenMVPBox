@@ -9,6 +9,7 @@ import socket
 import shutil
 import requests
 from bottle import static_file  
+import psutil
 
 class EnableCors(object):
     name = 'enable_cors'
@@ -293,6 +294,23 @@ def setInfoWebhook(id_func):
     else:
         print("Payload delivered successfully, code {}.".format(result.status_code))
     return ""
+
+@auth()
+@route('/monitor',  method=['OPTIONS', 'GET'])
+def monitor():
+
+    load=psutil.getloadavg()
+
+    return_dict = {'disk_usage': psutil.disk_usage('/')[3],
+    'load_0': load[0],
+    'load_1': load[1],
+    'load_2': load[2],
+    'cpu': psutil.cpu_percent(interval=1),
+    'ram': psutil.virtual_memory().percent
+    }  
+
+    return json.dumps(return_dict)
+
 
 if __name__ == '__main__':
     #set apiKey
