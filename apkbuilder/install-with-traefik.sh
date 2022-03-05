@@ -9,6 +9,7 @@ appUrl=""
 rm MyApp/app/src/androidTest/ -R
 rm MyApp/app/src/test -R
 
+mkdir MyApp/app/build
 touch MyApp/app/build/.keep
 
 if [ -z "$1" ]
