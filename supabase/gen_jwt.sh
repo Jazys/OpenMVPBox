@@ -1,33 +1,29 @@
 #!/usr/bin/env bash
-
 #
 # JWT Encoder Bash Script
 #
 sudo apt install -y -qq jq -q
 secret=$1
 
+#echo $secret
+
 # Static header fields.
 header='{
     "typ": "JWT",
-    "alg": "HS256",
-    "kid": "0001",
-    "iss": "Bash JWT Generator"
+    "alg": "HS256"
 }'
 
 # Use jq to set the dynamic `iat` and `exp`
 # fields on the header using the current time.
 # `iat` is set to now, and `exp` is now + 1 second.
-header=$(
-    echo "${header}" | jq --arg time_str "$(date +%s)" \
-    '
-    ($time_str | tonumber) as $time_num
-    | .iat=$time_num
-    | .exp=($time_num + 1)
-    '
-)
+
 payload='{
-    "role": $2
+    "role": "'$2'",
+    "iss": "supabase",
+    "iat": 1646434800,
+    "exp": 1804201200
 }'
+
 
 base64_encode()
 {

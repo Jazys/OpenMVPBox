@@ -18,14 +18,15 @@ services:
       - traefik.http.routers.supabase-front.entrypoints=websecure
       - traefik.http.routers.supabase-front.tls=true
       - traefik.http.routers.supabase-front.tls.certresolver=lets-encrypt
-      - traefik.http.routers.supabase-front.middlewares=test-auth-supa
-      - "traefik.http.middlewares.test-auth-supa.basicauth.users=$creditentials"
+      - traefik.http.routers.supabase-front.middlewares=supabase-front-auth
+      - "traefik.http.middlewares.supabase-front-auth.basicauth.users=$creditentials"
       - traefik.http.routers.supabase-front.service=supabase-front-srv
       - traefik.http.services.supabase-front-srv.loadbalancer.server.port=3000
       - traefik.docker.network=${NETWORK_TRAEFIK}
     environment:
-      SUPABASE_URL: ${URL_SUPABASE_BACK}
+      SUPABASE_URL: https://${URL_SUPABASE_BACK}
       STUDIO_PG_META_URL: http://meta:8080
+      SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
     networks:
       - traefik-proxy
