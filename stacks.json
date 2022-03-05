@@ -205,7 +205,7 @@
             "categories": [
                 "Organization"
             ],
-            "logo": "",
+            "logo": "https://cal.com/logo.svg",
             "video":[
                 {
                     "desc": "",
@@ -1069,7 +1069,7 @@
             "categories": [
                 "Dashboard"
             ],
-            "logo": "https://d33wubrfki0l68.cloudfront.net/a412b3c6d9ed…2d4d07fd263195b5a76e654b8/ac6fa/budibase-logo.png",
+            "logo": "https://kando.tech/sites/default/files/styles/logo/public/logos/budibase-logo.png",
             "video":[
                 {
                     "desc": "",
@@ -1100,7 +1100,7 @@
             "installScript": "./install-with-traefik.sh",
             "enable": "yes",
             "pathLocalDirStack":"/root/OpenMVPBox/baserow",
-            "title": "budibase",
+            "title": "baserow",
             "description": "Alternative to airtable",
             "categories": [
                 "Database"
