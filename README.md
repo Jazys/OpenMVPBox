@@ -17,12 +17,16 @@ These stacks are used for managing service in our VPS.
 
 <p align="center"><img width="400" alt="Logo" src="https://i.ibb.co/55w4g6K/front-Open-MVP.png"></p>
 
-For minimal installation (root user for moment)
+## For Dev command line
+
+Use a fresh Ubuntu 21.04.
+
+For minimal installation (**root user** for moment)
 
     wget https://raw.githubusercontent.com/Jazys/OpenMVPBox/main/omvp-setup.sh
     chmod +x ./omvp-setup.sh && sudo ./omvp-setup.sh mySubOrDomaineName (configure your DNS)
 
-Read all console log to find creditentials and urls (https://front.mySubOrDomaineName for install stacks)
+**Read all console log or in file (/tmp/toSendMail)** to find creditentials and urls (https://front.mySubOrDomaineName for install stacks)
 
 Ater choose your stack and run the installXX.sh script.
 
