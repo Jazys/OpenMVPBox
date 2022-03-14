@@ -26,9 +26,13 @@ For minimal installation (**root user** for moment)
     wget https://raw.githubusercontent.com/Jazys/OpenMVPBox/main/omvp-setup.sh
     chmod +x ./omvp-setup.sh && sudo ./omvp-setup.sh mySubOrDomaineName (configure your DNS)
 
-**Read all console log or in file (/tmp/toSendMail)** to find creditentials and urls (https://front.mySubOrDomaineName for install stacks)
+**Read all console log or in file (/tmp/toSendInfoByMail)** to find creditentials and urls (https://front.mySubOrDomaineName for install stacks)
 
 Ater choose your stack and run the installXX.sh script.
+
+To use frontend service, you need to enter token in configuration section and refresh page. If SSL certificates are disabled/invalid, you don't have access to service.
+
+Sometime, SSL certificates are invalid, you need to reboot your server.
 
 
 Use my referral DO link to help me to contribute more !
@@ -151,7 +155,7 @@ Defautl login/password :
 
 Each directory the .env file includes your login/password.
 
-## For developper
+## For developper (Deprecated)
 
 Clone the project on your VPS server (Ubuntu for the moment).
 
