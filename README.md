@@ -19,7 +19,7 @@ These stacks are used for managing service in our VPS.
 
 ## For Dev command line
 
-Use a fresh Ubuntu 21.04.
+Use a fresh Ubuntu 20.04.
 
 For minimal installation (**root user** for moment)
 

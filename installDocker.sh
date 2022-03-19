@@ -9,7 +9,7 @@ apt install apt-transport-https ca-certificates curl software-properties-common 
 
 if [ "$releaseVersion" = "DISTRIB_RELEASE=21.04" ]; then
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    apt install docker-ce docker-ce-cli containerd.io -y
+    apt install docker.io -y
 else
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable'
