@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  app:
+    image: gristlabs/grist
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    environment:
+      - GRIST_SUPPORT_ANON=true
+      - GRIST_DEFAULT_EMAIL=my@email
+      - GRIST_DOMAIN=Host(`${URL_GRIST}`)
+      - APP_HOME_URL=https://Host(`${URL_GRIST}`)
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grist.rule=Host(`${URL_GRIST}`)
+      - traefik.http.routers.grist.entrypoints=websecure
+      - traefik.http.routers.grist.tls=true
+      - traefik.http.routers.grist.tls.certresolver=lets-encrypt
+      - traefik.http.services.grist.loadbalancer.server.port=8484
+    networks:
+      - traefik-proxy
+    volumes:
+      - grist-data:/persist
+  
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:      
+  grist-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_GRIST}
+      o: bind
