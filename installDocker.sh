@@ -2,6 +2,7 @@
 
 [ `whoami` = root ] || exec sudo su -c $0
 
+apt-get install haveged -y
 releaseVersion=$(cat /etc/*-release | grep DISTRIB_RELEASE)
 apt update
 sudo apt-get install apache2-utils -y
