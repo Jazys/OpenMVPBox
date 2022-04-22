@@ -1212,6 +1212,50 @@
         },
         {
             "id": 34,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/botdiscordhttp",
+            "title": "BotDiscordHttp",
+            "description": "A simple HTTP gateway to combine with n8n or tool like this",
+            "categories": [
+                "Bot"
+            ],
+            "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "",
+                "stackfile": "docker-compose.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "apk.mydomaine.fr"
+                },
+                {
+                    "name": "public key",
+                    "value": "google.fr"
+                },
+                {
+                    "name": "webhook url",
+                    "value": "https;//n8n..."
+                }
+            ]
+        },
+        {
+            "id": 35,
             "type": 2,
             "installScript": "git",
             "enable": "no",
