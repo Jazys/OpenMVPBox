@@ -7,6 +7,8 @@ import {
 } from 'discord-interactions';
 import axios from 'axios';
 
+let webhookUrl="";
+
 const server = fastify({
   logger: true,
 });
@@ -22,7 +24,8 @@ server.get('/', (request, response) => {
 
 server.addHook('preHandler', async (request, response) => {
   // We don't want to check GET requests to our root url
-  if (request.method === 'POST') {
+  // console.log(request.context.config.url)
+  if (request.method === 'POST' && request.context.config.url!="/setUrl") {
     const signature = request.headers['x-signature-ed25519'];
     const timestamp = request.headers['x-signature-timestamp'];
     const isValidRequest = verifyKey(
@@ -38,6 +41,23 @@ server.addHook('preHandler', async (request, response) => {
   }
 });
 
+server.post('/setUrl', (request, response) => {
+  const apiKey = request.headers['api-key'];
+
+  /**TODO */
+  //for later
+  //for each guild id provided a unique url, so create map
+
+  if(apiKey === process.env.API_KEY)
+  {
+    webhookUrl=request.body.url;
+    server.log.info('New URL webhook '+ webhookUrl);
+    response.status(200).send({"status":"url change to "+webhookUrl})
+  }
+  else
+    response.status(400).send({})  
+});
+
 server.post('/', async (request, response) => {
   const message = request.body;
 
@@ -48,11 +68,20 @@ server.post('/', async (request, response) => {
     });
   }else if (message.type === InteractionType.APPLICATION_COMMAND) {
 
-    console.log("message : "+JSON.stringify(message))
+    /**TODO */
+    //for each post message get custom api-key for the current service
+    //get one or more parameter
 
-    if(process.env.URL_WEBHOOK!="" )
+    //console.log("message : "+JSON.stringify(message))
+
+    if(process.env.URL_WEBHOOK!="" || webhookUrl!="" )
     {
-      let reponse=  await axios.post(process.env.URL_WEBHOOK, message);
+      let reponse;
+     
+      if(webhookUrl!="")
+        reponse=  await axios.post(webhookUrl, message);
+      else
+        reponse=  await axios.post(process.env.URL_WEBHOOK, message);
  
       if(typeof reponse.data.data === "string")
       {

@@ -27,6 +27,7 @@ services:
       TOKEN: ${TOKEN}
       GUILD_ID: ${GUILD_ID}
       URL_WEBHOOK: ${URL_WEBHOOK}
+      API_KEY: ${API_KEY}
 
 
 networks:
