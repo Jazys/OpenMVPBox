@@ -16,7 +16,10 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
 
   n8n:
-    image: n8nio/n8n
+    #image: n8nio/n8n
+    build:
+      context: .
+      dockerfile: Dockerfile 
     restart: always
     environment:
       - DB_TYPE=postgresdb
@@ -36,9 +39,31 @@ services:
       - postgres
     volumes:
       - ./.n8n:/home/node/.n8n
+      - ./script:/script
     # Wait 5 seconds to start n8n to make sure that PostgreSQL is ready
     # when n8n tries to connect to it
-    command: /bin/sh -c "sleep 30; n8n start"
+    command: /bin/sh -c "sleep 30; node ./packages/cli/bin/n8n"
+
+  serversocket:
+    #image: n8nio/n8n
+    build:
+      context: .
+      dockerfile: DockerfileSocket 
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+      - EXECUTIONS_PROCESS=main
+      - WEBHOOK_TUNNEL_URL=${N8N_WEBHOOK_TUNNEL_URL}
+    ports:
+      - 42542:3000
 
 
 
