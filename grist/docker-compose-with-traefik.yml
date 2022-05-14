@@ -19,6 +19,7 @@ services:
       - traefik.http.routers.grist.tls=true
       - traefik.http.routers.grist.tls.certresolver=lets-encrypt
       - traefik.http.services.grist.loadbalancer.server.port=8484
+      - com.centurylinklabs.watchtower.enable=true
     networks:
       - traefik-proxy
     volumes:
