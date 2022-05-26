@@ -1,0 +1,180 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres:11
+    container_name : postgres_n8n
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_NON_ROOT_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - PGDATA=/data/postgres
+    networks:
+      - traefik-proxy
+    volumes:
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+      - postgresdata:/data/postgres
+
+  n8n:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+      - EXECUTIONS_PROCESS=main
+      - WEBHOOK_TUNNEL_URL=${N8N_WEBHOOK_TUNNEL_URL}
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n.rule=Host(`${URL_N8N}`)
+      - traefik.http.routers.n8n.entrypoints=websecure
+      - traefik.http.routers.n8n.tls=true
+      - traefik.http.routers.n8n.tls.certresolver=lets-encrypt
+      - traefik.http.services.n8n.loadbalancer.server.port=${PORT_N8N}
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+      - traefik.http.middlewares.testheader.headers.accessControlAllowMethods="GET, OPTIONS, PUT, POST, DELETE"
+      - traefik.http.middlewares.testheader.headers.accessControlAllowOriginList="*"    
+      - traefik.http.middlewares.testheader.headers.addVaryHeader=true
+      - traefik.http.middlewares.testheader.headers.accessControlAllowOrigin="*"
+      - traefik.http.middlewares.testheader.headers.accessControlAllowHeaders="Origin, Accept,Content-Type, X-Requested-With, X-CSRF-Token"  
+    networks:
+      - traefik-proxy
+    links:
+      - postgres
+    volumes:
+      - n8n:/home/node/.n8n
+      - ./script:/script
+      - ./share-view-only:/share-view-only
+    command: /bin/sh -c "sleep 30; node ./packages/cli/bin/n8n"
+    
+  n8n-viewer:
+    build:
+      context: .
+      dockerfile: DockerfileViewer 
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+      - EXECUTIONS_PROCESS=main
+      - WEBHOOK_TUNNEL_URL=${N8N_WEBHOOK_TUNNEL_URL} 
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n-viewer.rule=Host(`viewer.${URL_N8N}`)
+      - traefik.http.routers.n8n-viewer.entrypoints=websecure
+      - traefik.http.routers.n8n-viewer.tls=true
+      - traefik.http.routers.n8n-viewer.tls.certresolver=lets-encrypt
+      - traefik.http.services.n8n-viewer.loadbalancer.server.port=${PORT_N8N}
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+      - traefik.http.middlewares.testheader.headers.accessControlAllowMethods="GET, OPTIONS, PUT, POST, DELETE"
+      - traefik.http.middlewares.testheader.headers.accessControlAllowOriginList="*"    
+      - traefik.http.middlewares.testheader.headers.addVaryHeader=true
+      - traefik.http.middlewares.testheader.headers.accessControlAllowOrigin="*"
+      - traefik.http.middlewares.testheader.headers.accessControlAllowHeaders="Origin, Accept,Content-Type, X-Requested-With, X-CSRF-Token"  
+    networks:
+      - traefik-proxy
+    links:
+      - postgres
+    volumes:
+      - n8n:/home/node/.n8n
+      - ./script:/script
+      - ./share-view-only:/share-view-only
+    command: /bin/sh -c "sleep 30; node ./packages/cli/bin/n8n"
+
+  serversocket:
+    build:
+      context: .
+      dockerfile: DockerfileSocket 
+    restart: always
+    ports:
+      - 42542:3000
+      
+  code-server:
+    image: lscr.io/linuxserver/code-server
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - PASSWORD=35zVpn3R8vezG 
+      - SUDO_PASSWORD=abc 
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.code-n8n.rule=Host(`code.${URL_N8N}`)
+      - traefik.http.routers.code-n8n.entrypoints=websecure
+      - traefik.http.routers.code-n8no.tls=true
+      - traefik.http.routers.code-n8n.tls.certresolver=lets-encrypt
+      - traefik.http.services.code-n8n.loadbalancer.server.port=8443
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    volumes:
+      - ./script:/script
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./share-view-only:/share-view-only
+      - ./init-install.sh:/install/init-install.sh
+    networks:
+      - traefik-proxy
+
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    volumes:
+      - ./share-view-only:/srv
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser-n8n.rule=Host(`file.${URL_N8N}`)
+      - traefik.http.routers.filebrowser-n8n.entrypoints=websecure
+      - traefik.http.routers.filebrowser-n8n.tls=true
+      - traefik.http.routers.filebrowser-n8n.tls.certresolver=lets-encrypt
+      - traefik.http.services.filebrowser-n8n.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    networks:
+      - traefik-proxy
+
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  postgresdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_POSTGRES}
+      o: bind
+
+  n8n:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_N8N}
+      o: bind
+

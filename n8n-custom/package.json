@@ -1,0 +1,14 @@
+{
+  "name": "docker_web_app",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "shogo suzuki",
+  "main": "socket_server.ts",
+  "scripts": {
+    "start": "node socket_server.js"
+  },
+  "dependencies": {
+    "express": "*",
+    "socket.io": "^4.5.0"
+  }
+}
