@@ -1,4 +1,4 @@
-FROM jazys38/n8n-custom-form:1.4
+FROM jazys38/n8n-custom-form:1.4.1
 
 RUN apk --update add curl
 ENV PYTHONUNBUFFERED=1

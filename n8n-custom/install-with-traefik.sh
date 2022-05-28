@@ -5,6 +5,9 @@ mkdir -p .n8n
 chmod +x init-data.sh
 chmod +x init-install.sh
 mkdir -p share-view-only
+chmod 777 share-view-only/ -R
+
+chmod 777 script/ -R
 
 domaineN8n=""
 

@@ -35,6 +35,7 @@ services:
       - N8N_BASIC_AUTH_PASSWORD
       - EXECUTIONS_PROCESS=main
       - WEBHOOK_TUNNEL_URL=${N8N_WEBHOOK_TUNNEL_URL}
+      - WEB_SOCKET_URL=ws.${URL_N8N}
     logging:
       options:
         max-size: '12m'
@@ -80,6 +81,7 @@ services:
       - N8N_BASIC_AUTH_PASSWORD
       - EXECUTIONS_PROCESS=main
       - WEBHOOK_TUNNEL_URL=${N8N_WEBHOOK_TUNNEL_URL} 
+      - WEB_SOCKET_URL=ws.${URL_N8N}
     logging:
       options:
         max-size: '12m'
@@ -113,8 +115,16 @@ services:
       context: .
       dockerfile: DockerfileSocket 
     restart: always
-    ports:
-      - 42542:3000
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ws-srv.rule=Host(`ws.${URL_N8N}`)
+      - traefik.http.routers.ws-srv.entrypoints=websecure
+      - traefik.http.routers.ws-srv.tls=true
+      - traefik.http.routers.ws-srv.tls.certresolver=lets-encrypt
+      - traefik.http.services.ws-srv.loadbalancer.server.port=3000
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    networks:
+      - traefik-proxy
       
   code-server:
     image: lscr.io/linuxserver/code-server
@@ -129,7 +139,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.code-n8n.rule=Host(`code.${URL_N8N}`)
       - traefik.http.routers.code-n8n.entrypoints=websecure
-      - traefik.http.routers.code-n8no.tls=true
+      - traefik.http.routers.code-n8n.tls=true
       - traefik.http.routers.code-n8n.tls.certresolver=lets-encrypt
       - traefik.http.services.code-n8n.loadbalancer.server.port=8443
       - traefik.docker.network=${NETWORK_TRAEFIK}
