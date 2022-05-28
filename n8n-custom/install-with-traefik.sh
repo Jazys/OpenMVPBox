@@ -29,7 +29,16 @@ else
       sed -i '/N8N_BASIC_AUTH_PASSWORD/c\N8N_BASIC_AUTH_PASSWORD='$3 .env
 fi
 
-echo "Login/admin for https://"$domaineN8n " are " $2 " and "$3 " or test/test if empty " >> /tmp/toSendInfoByMail
+if [ -z "$4" ]
+then
+      echo "use default password for vscode Azert@1234"
+else
+      sed -i '/VSCODE_PASSWORD/c\VSCODE_PASSWORD='$4 .env
+fi
+
+
+
+echo "Login/admin for https://"$domaineN8n " are " $2 " and "$3 " or test/test if empty and vscode password "$4 " or Azerty@1234 if empty " >> /tmp/toSendInfoByMail
 
 
 docker-compose -f docker-compose-with-traefik.yml --env-file .env up -d

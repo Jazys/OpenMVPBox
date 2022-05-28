@@ -133,7 +133,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Paris
-      - PASSWORD=35zVpn3R8vezG 
+      - PASSWORD=${VSCODE_PASSWORD}
       - SUDO_PASSWORD=abc 
     labels:
       - traefik.enable=true
