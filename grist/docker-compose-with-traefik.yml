@@ -8,10 +8,12 @@ services:
         max-file: '5'
       driver: json-file
     environment:
-      - GRIST_SUPPORT_ANON=true
+      - GRIST_SUPPORT_ANON=false
       - GRIST_DEFAULT_EMAIL=my@email
-      - GRIST_DOMAIN=Host(`${URL_GRIST}`)
+#      - GRIST_DOMAIN=Host(`${URL_GRIST}`)
       - APP_HOME_URL=https://Host(`${URL_GRIST}`)
+      - GRIST_SINGLE_ORG=docs
+#      - GRIST_ORG_IN_PATH=false
     labels:
       - traefik.enable=true
       - traefik.http.routers.grist.rule=Host(`${URL_GRIST}`)
