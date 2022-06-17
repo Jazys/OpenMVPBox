@@ -25,6 +25,13 @@ fi
 
 sed -i '/APPSMITH_ADMIN_EMAILS/c\APPSMITH_ADMIN_EMAILS='$emailAdmin'' .env
 
+if [ -z "$3" ]
+then
+      echo "default user id 1"
+else
+      sed -i '/USER_ID/c\USER_ID='$3 .env
+fi
+
 echo "Email login  for https://"$domaineAppsmith " is "$emailAdmin " " >> /tmp/toSendInfoByMail
 
 docker-compose -f docker-compose-with-traefik.yml up -d

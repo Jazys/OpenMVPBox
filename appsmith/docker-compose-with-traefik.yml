@@ -15,11 +15,11 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
       - traefik.enable=true
-      - traefik.http.routers.appsmith.rule=Host(`${URL_APPSMITH}`)
-      - traefik.http.routers.appsmith.entrypoints=websecure
-      - traefik.http.routers.appsmith.tls=true
-      - traefik.http.routers.appsmith.tls.certresolver=lets-encrypt
-      - traefik.http.services.appsmith.loadbalancer.server.port=${PORT_APPSMITH}
+      - traefik.http.routers.appsmith${USER_ID:-1}.rule=Host(`${URL_APPSMITH}`)
+      - traefik.http.routers.appsmith${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.appsmith${USER_ID:-1}.tls=true
+      - traefik.http.routers.appsmith${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.appsmith${USER_ID:-1}.loadbalancer.server.port=${PORT_APPSMITH}
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & /start-nginx.sh'"
     depends_on:
       - appsmith-internal-server
