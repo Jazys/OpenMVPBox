@@ -15,4 +15,11 @@ fi
 
 sed -i '/URL_KUMA/c\URL_KUMA='$domaine .env
 
+if [ -z "$2" ]
+then
+      echo "default user id 1"
+else
+      sed -i '/USER_ID/c\USER_ID='$2 .env
+fi
+
 docker-compose -f docker-compose-with-traefik.yml up -d 
