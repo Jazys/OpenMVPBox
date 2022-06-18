@@ -24,6 +24,13 @@ else
       sed -i '/N8N_BASIC_AUTH_PASSWORD/c\N8N_BASIC_AUTH_PASSWORD='$3 .env
 fi
 
+if [ -z "$4" ]
+then
+      echo "default user id 1"
+else
+      sed -i '/USER_ID/c\USER_ID='$4 .env
+fi
+
 echo "Login/admin for https://"$domaineN8n " are " $2 " and "$3 " or test/test if empty " >> /tmp/toSendInfoByMail
 
 
