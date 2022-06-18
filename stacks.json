@@ -1272,6 +1272,58 @@
         },
         {
             "id": 35,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/n8n-custom",
+            "title": "n8n-custom",
+            "description": "Automate your task and add custom python script",
+            "categories": [
+                "Automation"
+            ],
+            "logo": "https://uploads-ssl.webflow.com/5fbfbca2132839a6a22e1ecc/6040fe8b0e62dc21fed05e83_n8n_-_DEV_Community.png",
+            "video":[
+                {
+                    "desc": "Scraping",
+                    "link": "https://www.youtube.com/watch?v=Rt9LsPeMKk4&t=5s"
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "Introduction",
+                    "link": "https://batisseurdunumerique.fr/blog/fr/blog/n8n"
+                }
+            ],
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "t12.nuage.omvpb.ovh"
+                },
+                {
+                    "name": "admin",
+                    "value": "admin"
+                },
+                {
+                    "name": "password",
+                    "value": "pass"
+                },
+                {
+                    "name": "password_vscode",
+                    "value": "pass"
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                } 
+            ]
+        },
+        {
+            "id": 36,
             "type": 2,
             "installScript": "git",
             "enable": "no",
