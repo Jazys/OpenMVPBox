@@ -69,6 +69,7 @@ def readApkiKey(pathfile):
     global HASH_API_KEY
     file = open(pathfile, "r")
     HASH_API_KEY=file.readline().strip()
+    #HASH_API_KEY="1234"
     print (HASH_API_KEY)
     file.close()
 
@@ -169,6 +170,57 @@ def getAllSintalledStack():
             toReturn.append(aStack)
     return json.dumps({"stacksInstalled": toReturn})
 
+
+#get all installed stack
+@app.route('/installedStack/custom', method=['OPTIONS', 'GET'])                                             
+@auth()
+def getAllSintalledStackForAUser():  
+    dirList = os.listdir(DIR_CURRENT_STACKS) 
+    dirListUser=[]
+    toReturn=[]
+
+    idStack=request.json["id"]  
+
+    #to copy existing stack
+    cpyallStacksJson= json.loads(json.dumps(allStacksJson))
+    print(dirList)
+    for dir in dirList:     
+        if dir.find(str(idStack))!=-1:
+            dirListUser.append(dir)
+    print(dirListUser)        
+    for dir in dirListUser:
+        if(os.path.isdir(os.path.join(DIR_CURRENT_STACKS,dir))):
+            env=[]
+            dirTmpStack=os.path.join(DIR_CURRENT_STACKS,dir)
+            dirList2 = os.listdir(dirTmpStack) 
+            print (dirList2)
+            for afilename in dirList2:
+                #print(afilename)
+                if afilename == ".env":              
+                    file = open(os.path.join(dirTmpStack,afilename), "r")
+                    alline=file.readlines()
+                    print(alline)
+
+                    for aLine in alline:
+                        aLine=aLine.strip()
+                        if aLine!="" and aLine[0]!="#":
+                            splitLine=aLine.split("=")
+                            env.append({ "name":splitLine[0], "value":splitLine[1]})
+                    print(env)
+            
+            indLastUnderscore=dir.rfind('_')
+            titleFromDir=dir[indLastUnderscore+1:]
+            print(titleFromDir)
+
+            for aStack in cpyallStacksJson["stacks"]:
+                if aStack["title"].lower()==titleFromDir:
+                    aStack["env"]=env
+                    aStack["userId"]=dir[:dir.find('_')]
+                    print(aStack)
+                    break
+
+            toReturn.append(aStack)
+    return json.dumps(toReturn)
 #create stack
 @app.route('/create', method=['OPTIONS', 'POST'])
 @auth()   
@@ -176,7 +228,15 @@ def createStack():
 
     allCommandToRunToDeploy=[]
     tmpStack={}  
-    idStack=request.json["id"]     
+    idStack=request.json["id"] 
+    nbStack=-1
+    userid=-1
+
+    if("userid" in request.json ) :  
+        userid= request.json["userid"] 
+
+    if("nb_app" in request.json ) :  
+        nbStack= request.json["nb_app"] 
 
     for aStack in allStacksJson["stacks"]:
         if(aStack['id']==idStack):
@@ -187,12 +247,23 @@ def createStack():
     if (len(tmpStack)==0):
         return "not found"
 
+    dirList = os.listdir(DIR_CURRENT_STACKS) 
+    nbInstalledApp=0
+    for dir in dirList:     
+        if userid!=-1 and dir.find(str(userid))!=-1:
+            nbInstalledApp=nbInstalledApp+1
+    
+    print(nbInstalledApp)
+    print(nbStack)
+    if (nbInstalledApp!=0 and nbStack!=-1 and nbInstalledApp>=nbStack):
+        return json.dumps({"info": "too many app"})
+
     #first arg is the script to use for installion
     allCommandToRunToDeploy.append(tmpStack["installScript"])
 
     #get env from web    
     for aEnv in request.json["env"]:
-        allCommandToRunToDeploy.append(aEnv["value"])
+        allCommandToRunToDeploy.append(str(aEnv["value"]))
     
     #print (allCommandToRunToDeploy)
     newDirNameStack=str(request.json["userid"])+"_"+str(tmpStack["title"]).lower()
@@ -205,6 +276,7 @@ def createStack():
     #change env var
     changeVolumePath(".env","/root/OpenMVPBox/",DIR_CURRENT_STACKS+"/"+str(request.json["userid"])+"_")
     #subprocess.run(allCommandToRunToDeploy, shell=False)
+    print(allCommandToRunToDeploy)
     out = check_output(allCommandToRunToDeploy)
 
     os.chdir(DIR_CURRENT_STACKS) 
@@ -318,4 +390,5 @@ if __name__ == '__main__':
 
     #run service
     bottle.run(host="@ip", port=9080)
+    #bottle.run(host="0.0.0.0", port=9081)
 

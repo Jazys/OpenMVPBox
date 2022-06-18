@@ -42,7 +42,11 @@
                 {
                     "name": "password",
                     "value": "pass"
-                }
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                } 
             ]
         },
         {
@@ -118,7 +122,11 @@
                 {
                     "name": "Email admin",
                     "value": "test@test.fr"
-                }
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                } 
                               
             ]
         },
@@ -155,7 +163,11 @@
                 {
                     "name": "domaine",
                     "value": "t48.nuage.omvpb.ovh"
-                }               
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                }                
             ]
         },
         {
@@ -479,6 +491,10 @@
                 {
                     "name": "domaine",
                     "value": "kuma.nuage.omvpb.ovh"
+                },
+                {
+                    "name": "userid",
+                    "value": 1
                 }               
             ]
         },
