@@ -36,6 +36,13 @@ else
       sed -i '/VSCODE_PASSWORD/c\VSCODE_PASSWORD='$4 .env
 fi
 
+if [ -z "$5" ]
+then
+      echo "default user id 1"
+else
+      sed -i '/USER_ID/c\USER_ID='$5 .env
+fi
+
 
 
 echo "Login/admin for https://"$domaineN8n " are " $2 " and "$3 " or test/test if empty and vscode password "$4 " or Azerty@1234 if empty " >> /tmp/toSendInfoByMail

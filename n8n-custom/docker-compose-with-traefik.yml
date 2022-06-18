@@ -4,7 +4,7 @@ services:
 
   postgres:
     image: postgres:11
-    container_name : postgres_n8n
+    container_name : postgres_n8n${USER_ID:-1}
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_NON_ROOT_USER}
@@ -25,7 +25,7 @@ services:
     restart: always
     environment:
       - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}
+      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}${USER_ID:-1}
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
@@ -43,11 +43,11 @@ services:
       driver: json-file
     labels:
       - traefik.enable=true
-      - traefik.http.routers.n8n.rule=Host(`${URL_N8N}`)
-      - traefik.http.routers.n8n.entrypoints=websecure
-      - traefik.http.routers.n8n.tls=true
-      - traefik.http.routers.n8n.tls.certresolver=lets-encrypt
-      - traefik.http.services.n8n.loadbalancer.server.port=${PORT_N8N}
+      - traefik.http.routers.n8n${USER_ID:-1}.rule=Host(`${URL_N8N}`)
+      - traefik.http.routers.n8n${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.n8n${USER_ID:-1}.tls=true
+      - traefik.http.routers.n8n${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.n8n${USER_ID:-1}.loadbalancer.server.port=${PORT_N8N}
       - traefik.docker.network=${NETWORK_TRAEFIK}
       - traefik.http.middlewares.testheader.headers.accessControlAllowMethods="GET, OPTIONS, PUT, POST, DELETE"
       - traefik.http.middlewares.testheader.headers.accessControlAllowOriginList="*"    
@@ -71,7 +71,7 @@ services:
     restart: always
     environment:
       - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}
+      - DB_POSTGRESDB_HOST=${POSTGRES_HOST}${USER_ID:-1}
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
@@ -89,11 +89,11 @@ services:
       driver: json-file
     labels:
       - traefik.enable=true
-      - traefik.http.routers.n8n-viewer.rule=Host(`viewer.${URL_N8N}`)
-      - traefik.http.routers.n8n-viewer.entrypoints=websecure
-      - traefik.http.routers.n8n-viewer.tls=true
-      - traefik.http.routers.n8n-viewer.tls.certresolver=lets-encrypt
-      - traefik.http.services.n8n-viewer.loadbalancer.server.port=${PORT_N8N}
+      - traefik.http.routers.n8n-viewer${USER_ID:-1}.rule=Host(`viewer.${URL_N8N}`)
+      - traefik.http.routers.n8n-viewer${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.n8n-viewer${USER_ID:-1}.tls=true
+      - traefik.http.routers.n8n-viewer${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.n8n-viewer${USER_ID:-1}.loadbalancer.server.port=${PORT_N8N}
       - traefik.docker.network=${NETWORK_TRAEFIK}
       - traefik.http.middlewares.testheader.headers.accessControlAllowMethods="GET, OPTIONS, PUT, POST, DELETE"
       - traefik.http.middlewares.testheader.headers.accessControlAllowOriginList="*"    
@@ -117,11 +117,11 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.ws-srv.rule=Host(`ws.${URL_N8N}`)
-      - traefik.http.routers.ws-srv.entrypoints=websecure
-      - traefik.http.routers.ws-srv.tls=true
-      - traefik.http.routers.ws-srv.tls.certresolver=lets-encrypt
-      - traefik.http.services.ws-srv.loadbalancer.server.port=3000
+      - traefik.http.routers.ws-srv${USER_ID:-1}.rule=Host(`ws.${URL_N8N}`)
+      - traefik.http.routers.ws-srv${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.ws-srv${USER_ID:-1}.tls=true
+      - traefik.http.routers.ws-srv${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.ws-srv${USER_ID:-1}.loadbalancer.server.port=3000
       - traefik.docker.network=${NETWORK_TRAEFIK}
     networks:
       - traefik-proxy
@@ -137,11 +137,11 @@ services:
       - SUDO_PASSWORD=abc 
     labels:
       - traefik.enable=true
-      - traefik.http.routers.code-n8n.rule=Host(`code.${URL_N8N}`)
-      - traefik.http.routers.code-n8n.entrypoints=websecure
-      - traefik.http.routers.code-n8n.tls=true
-      - traefik.http.routers.code-n8n.tls.certresolver=lets-encrypt
-      - traefik.http.services.code-n8n.loadbalancer.server.port=8443
+      - traefik.http.routers.code-n8n${USER_ID:-1}.rule=Host(`code.${URL_N8N}`)
+      - traefik.http.routers.code-n8n${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.code-n8n${USER_ID:-1}.tls=true
+      - traefik.http.routers.code-n8n${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.code-n8n${USER_ID:-1}.loadbalancer.server.port=8443
       - traefik.docker.network=${NETWORK_TRAEFIK}
     volumes:
       - ./script:/script
@@ -158,11 +158,11 @@ services:
       - ./share-view-only:/srv
     labels:
       - traefik.enable=true
-      - traefik.http.routers.filebrowser-n8n.rule=Host(`file.${URL_N8N}`)
-      - traefik.http.routers.filebrowser-n8n.entrypoints=websecure
-      - traefik.http.routers.filebrowser-n8n.tls=true
-      - traefik.http.routers.filebrowser-n8n.tls.certresolver=lets-encrypt
-      - traefik.http.services.filebrowser-n8n.loadbalancer.server.port=80
+      - traefik.http.routers.filebrowser-n8n${USER_ID:-1}.rule=Host(`file.${URL_N8N}`)
+      - traefik.http.routers.filebrowser-n8n${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.filebrowser-n8n${USER_ID:-1}.tls=true
+      - traefik.http.routers.filebrowser-n8n${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.filebrowser-n8n${USER_ID:-1}.loadbalancer.server.port=80
       - traefik.docker.network=${NETWORK_TRAEFIK}
     networks:
       - traefik-proxy
