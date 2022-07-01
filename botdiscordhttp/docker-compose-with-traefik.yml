@@ -15,7 +15,6 @@ services:
       - traefik.http.routers.bot-discord${USER_ID:-1}.rule=Host(`${URL_BOT}`)
       - traefik.http.routers.bot-discord${USER_ID:-1}.entrypoints=websecure
       - traefik.http.routers.bot-discord${USER_ID:-1}.tls=true
-      - traefik.http.routers.bot-discord${USER_ID:-1}.service=bot-discord
       - traefik.http.routers.bot-discord${USER_ID:-1}.tls.certresolver=lets-encrypt
       - traefik.http.services.bot-discord${USER_ID:-1}.loadbalancer.server.port=3000
       - traefik.docker.network=${NETWORK_TRAEFIK}
