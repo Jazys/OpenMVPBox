@@ -3,7 +3,7 @@ version: "3.3"
 services:
   db:
     image: mysql:5.7
-    container_name: mysqlwordpressContainer
+    container_name: mysqlwordpressContainer${USER_ID:-1}
     volumes:
       - mysqlwordpress:/var/lib/mysql
     restart: always
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: ./Dockerfile   
     environment:
-      WORDPRESS_DB_HOST: mysqlwordpressContainer:3306
+      WORDPRESS_DB_HOST: mysqlwordpressContainer${USER_ID:-1}:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
@@ -52,15 +52,15 @@ services:
       driver: json-file
     labels:
       - traefik.enable=true
-      - traefik.http.routers.wordpress.rule=Host(`${URL_WORDPRESS}`)
-      - traefik.http.routers.wordpress.entrypoints=websecure
-      - traefik.http.routers.wordpress.tls=true
-      - traefik.http.routers.wordpress.tls.certresolver=lets-encrypt
-      - traefik.http.services.wordpress.loadbalancer.server.port=80
+      - traefik.http.routers.wordpress${USER_ID:-1}.rule=Host(`${URL_WORDPRESS}`)
+      - traefik.http.routers.wordpress${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.wordpress${USER_ID:-1}.tls=true
+      - traefik.http.routers.wordpress${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.wordpress${USER_ID:-1}.loadbalancer.server.port=80
       - traefik.docker.network=${NETWORK_TRAEFIK}
     restart: always
     environment:
-      WORDPRESS_DB_HOST: mysqlwordpressContainer:3306
+      WORDPRESS_DB_HOST: mysqlwordpressContainer${USER_ID:-1}:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress

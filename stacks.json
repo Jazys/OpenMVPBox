@@ -783,7 +783,11 @@
                 {
                     "name": "domaine",
                     "value": "wordpress.nuage.omvpb.ovh"
-                }               
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                }                
             ]
         },
         {
@@ -1324,6 +1328,46 @@
         },
         {
             "id": 36,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/carbonejs",
+            "title": "carbonejs",
+            "description": "Create document automatically",
+            "categories": [
+                "Automation"
+            ],
+            "logo": "https://carbone.io/img/favicon.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "carbonejs.nuage.omvpb.ovh"
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                } 
+            ]
+        },
+        {
+            "id": 37,
             "type": 2,
             "installScript": "git",
             "enable": "no",

@@ -13,11 +13,11 @@ services:
       driver: json-file
     labels:
       - traefik.enable=true
-      - traefik.http.routers.render-file.rule=Host(`${URL_CARBONE}`)
-      - traefik.http.routers.render-file.entrypoints=websecure
-      - traefik.http.routers.render-file.tls=true
-      - traefik.http.routers.render-file.tls.certresolver=lets-encrypt
-      - traefik.http.services.render-file.loadbalancer.server.port=4000
+      - traefik.http.routers.render-file${USER_ID:-1}.rule=Host(`${URL_CARBONE}`)
+      - traefik.http.routers.render-file${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.render-file${USER_ID:-1}.tls=true
+      - traefik.http.routers.render-file${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.render-file${USER_ID:-1}.loadbalancer.server.port=4000
     networks:
       - traefik-proxy
     volumes:
@@ -30,11 +30,11 @@ services:
       - ./database.db:/database.db
     labels:
       - traefik.enable=true
-      - traefik.http.routers.filebrowser-carbo.rule=Host(`file.${URL_CARBONE}`)
-      - traefik.http.routers.filebrowser-carbo.entrypoints=websecure
-      - traefik.http.routers.filebrowser-carbo.tls=true
-      - traefik.http.routers.filebrowser-carbo.tls.certresolver=lets-encrypt
-      - traefik.http.services.filebrowser-carbo.loadbalancer.server.port=80
+      - traefik.http.routers.filebrowser-carbo${USER_ID:-1}.rule=Host(`file.${URL_CARBONE}`)
+      - traefik.http.routers.filebrowser-carbo${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.filebrowser-carbo${USER_ID:-1}.tls=true
+      - traefik.http.routers.filebrowser-carbo${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.filebrowser-carbo${USER_ID:-1}.loadbalancer.server.port=80
       - traefik.docker.network=${NETWORK_TRAEFIK}
     restart: unless-stopped
     networks:

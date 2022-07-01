@@ -13,6 +13,13 @@ else
       echo 'domaine for wordpress is '$domaine
 fi
 
+if [ -z "$2" ]
+then
+      echo "default user id 1"
+else
+      sed -i '/USER_ID/c\USER_ID='$2 .env
+fi
+
 sed -i '/URL_WORDPRESS/c\URL_WORDPRESS='$domaine .env
 
 echo "For wordpress stack url is https://"$domaine " login are admin/admin please change it !">> /tmp/toSendInfoByMail

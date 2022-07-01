@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  puppeteer:
+    build: .
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+    # mount code and output directories into the container
+      - ./data:/home/pptruser/Downloads
+      - ./example.js:/home/pptruser/example.js
+    #shm_size: 1gb #512M
+    # just run the container doing nothing
+    command: ["node", "/home/pptruser/example.js"]
