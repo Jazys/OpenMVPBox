@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  puppeteer:
+    build: .
+    restart: always
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - scraperdata:/home/pptruser/Downloads
+      - ./example.js:/home/pptruser/Downloads/example.js
+    command: ["node", "/home/pptruser/Downloads/example.js"]
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    volumes:
+      - scraperdata:/srv
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser-scraper${USER_ID:-1}.rule=Host(`${URL_SCRAPER}`)
+      - traefik.http.routers.filebrowser-scraper${USER_ID:-1}.entrypoints=websecure
+      - traefik.http.routers.filebrowser-scraper${USER_ID:-1}.tls=true
+      - traefik.http.routers.filebrowser-scraper${USER_ID:-1}.tls.certresolver=lets-encrypt
+      - traefik.http.services.filebrowser-scraper${USER_ID:-1}.loadbalancer.server.port=80
+      - traefik.docker.network=${NETWORK_TRAEFIK}
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external:
+      name: ${NETWORK_TRAEFIK}
+      
+volumes:
+  scraperdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_SCRAPER}
+      o: bind
+      
