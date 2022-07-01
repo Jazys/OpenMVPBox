@@ -1265,12 +1265,32 @@
                     "value": "apk.mydomaine.fr"
                 },
                 {
-                    "name": "public key",
-                    "value": "google.fr"
+                    "name": "Public key",
+                    "value": "aaa"
+                },
+                {
+                    "name": "Api Key",
+                    "value": "aaa"
                 },
                 {
                     "name": "webhook url",
                     "value": "https;//n8n..."
+                },                
+                {
+                    "name": "userid",
+                    "value": 1
+                }, 
+                {
+                    "name": "Application ID",
+                    "value": "aaaa."
+                },
+                {
+                    "name": "Token",
+                    "value": "aa"
+                },
+                {
+                    "name": "Guild ID",
+                    "value": "aaaa"
                 }
             ]
         },
@@ -1368,6 +1388,46 @@
         },
         {
             "id": 37,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/scraper",
+            "title": "scraper",
+            "description": "Create scraping script Puppeteer",
+            "categories": [
+                "Scraping"
+            ],
+            "logo": "https://user-images.githubusercontent.com/10379601/29446482-04f7036a-841f-11e7-9872-91d1fc2ea683.png",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "scrapper.nuage.omvpb.ovh"
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                } 
+            ]
+        },
+        {
+            "id": 38,
             "type": 2,
             "installScript": "git",
             "enable": "no",
