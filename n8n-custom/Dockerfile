@@ -12,3 +12,5 @@ RUN apk --update --upgrade add bash cairo pango gdk-pixbuf py3-cffi py3-pillow
 RUN pip3 install WeasyPrint==51
 RUN apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
 RUN npm install n8n-nodes-puppeteer@0.3.1 -g
+RUN pip3 install pillow
+RUN pip3 install requests
