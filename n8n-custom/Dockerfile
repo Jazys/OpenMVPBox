@@ -14,3 +14,4 @@ RUN apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpi
 RUN npm install n8n-nodes-puppeteer@0.3.1 -g
 RUN pip3 install pillow
 RUN pip3 install requests
+RUN pip3 install pyaes
