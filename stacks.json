@@ -1428,6 +1428,46 @@
         },
         {
             "id": 38,
+            "type": 1,
+            "installScript": "./install-with-traefik.sh",
+            "enable": "yes",
+            "pathLocalDirStack":"/root/OpenMVPBox/templatenft",
+            "title": "nft",
+            "description": "Create a website to interact with nft (mint, buy, rent)",
+            "categories": [
+                "Payment, NFT"
+            ],
+            "logo": "https://nft-actu.io/wp-content/uploads/2022/06/top-10-marketplace-NFT.jpg",
+            "video":[
+                {
+                    "desc": "",
+                    "link": ""
+                }                
+            ],
+           "tutorials":[
+                {
+                    "desc": "",
+                    "link": ""
+                }
+            ],
+            "repository": {
+                "url": "https://github.com/Jazys/OpenMVPBox",
+                "stackfile": "docker-compose-with-traefik.yml",
+                "envfile":".env"
+            },
+            "env": [
+                {
+                    "name": "domaine",
+                    "value": "nft.nuage.omvpb.ovh"
+                },
+                {
+                    "name": "userid",
+                    "value": 1
+                } 
+            ]
+        },
+        {
+            "id": 39,
             "type": 2,
             "installScript": "git",
             "enable": "no",
