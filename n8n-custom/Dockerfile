@@ -15,3 +15,4 @@ RUN npm install n8n-nodes-puppeteer@0.3.1 -g
 RUN pip3 install pillow
 RUN pip3 install requests
 RUN pip3 install pyaes
+RUN pip3 install bs4
