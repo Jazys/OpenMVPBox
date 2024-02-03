@@ -1,0 +1,35 @@
+version: "3.3"
+services:
+  changedetection:
+    image: ghcr.io/dgtlmoon/changedetection.io
+    hostname: changedetection
+    restart: always
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.changedetection.rule=Host(`${URL_CHANGEDETECTION}`)
+      - traefik.http.routers.changedetection.entrypoints=websecure
+      - traefik.http.routers.changedetection.tls=true
+      - traefik.http.routers.changedetection.tls.certresolver=lets-encrypt
+      - traefik.http.services.changedetection.loadbalancer.server.port=5000
+    volumes:
+      - changedetection-data:/datastore
+    networks:
+      - hosting_web
+
+networks:
+  hosting_web:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  changedetection-data:
+     driver: local
+     driver_opts:
+      type: none
+      device: ${CHANGE_DATA}
+      o: bind
