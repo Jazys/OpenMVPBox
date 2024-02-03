@@ -1,0 +1,81 @@
+ersion: "3.3"
+services:
+  mail:
+    image: bytemark/smtp
+    restart: always
+
+  plausible_db:
+    # supported versions are 12, 13, and 14
+    image: postgres:14-alpine
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - hosting_web
+
+  plausible_events_db:
+    image: clickhouse/clickhouse-server:22.6-alpine
+    restart: always
+    volumes:
+      - event-data:/var/lib/clickhouse
+      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - hosting_web
+
+  plausible:
+    image: plausible/analytics:latest
+    restart: always
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.plausible.rule=Host(`${URL_PLAUSIBLE}`)
+      - traefik.http.routers.plausible.entrypoints=websecure
+      - traefik.http.routers.plausible.tls=true
+      - traefik.http.routers.plausible.tls.certresolver=lets-encrypt
+      - traefik.http.services.plausible.loadbalancer.server.port=8000
+    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    depends_on:
+      - plausible_db
+      - plausible_events_db
+      - mail
+    env_file:
+      - .env
+    networks:
+      - hosting_web
+
+networks:
+  hosting_web:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  db-data:
+     driver: local
+     driver_opts:
+      type: none
+      device: ${DB_DATA}
+      o: bind
+  event-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${EVENT_DATA}
+      o: bind
+  geoip:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${GEOIP_DATA}
+      o: bind
+
