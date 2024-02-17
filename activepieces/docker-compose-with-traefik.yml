@@ -1,0 +1,62 @@
+version: '3.0'
+services:
+  activepieces:
+    image: ghcr.io/activepieces/activepieces:0.20.2
+    container_name: activepieces
+    restart: unless-stopped
+    ## Enable the following line if you already use AP_EXECUTION_MODE with SANDBOXED or old activepieces, checking the breaking >
+    ## privileged: true
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.activepieces.rule=Host(`${AP_FRONTEND_URL}`)
+      - traefik.http.routers.activepieces.entrypoints=websecure
+      - traefik.http.routers.activepieces.tls=true
+      - traefik.http.routers.activepieces.tls.certresolver=lets-encrypt
+      - traefik.http.services.activepieces.loadbalancer.server.port=80
+    depends_on:
+      - postgres
+      - redis
+    env_file: .env
+    networks:
+      - hosting_web
+
+  postgres:
+    image: 'postgres:14.4'
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      - 'POSTGRES_DB=${AP_POSTGRES_DATABASE}'
+      - 'POSTGRES_PASSWORD=${AP_POSTGRES_PASSWORD}'
+      - 'POSTGRES_USER=${AP_POSTGRES_USERNAME}'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - hosting_web
+
+  redis:
+    image: 'redis:7.0.7'
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - 'redis-data:/data'
+    networks:
+      - hosting_web
+
+networks:
+  hosting_web:
+    external:
+      name: ${NETWORK_TRAEFIK}
+
+volumes:
+  postgres-data:
+     driver: local
+     driver_opts:
+      type: none
+      device: ${PG_DATA}
+      o: bind
+  redis-data:
+     driver: local
+     driver_opts:
+      type: none
+      device: ${REDIS_DATA}
+      o: bind
